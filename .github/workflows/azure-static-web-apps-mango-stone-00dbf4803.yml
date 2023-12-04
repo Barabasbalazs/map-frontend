@@ -23,9 +23,9 @@ jobs:
           node-version: 18
           cache: 'npm'
      - name: Install Dependencies
-       run: yarn install
+       run: npm install
      - name: Build Vite Project
-       run: yarn build
+       run: npm build
      - name: Deploy to Azure Static Web Apps
        id: builddeploy
        uses: Azure/static-web-apps-deploy@v1
