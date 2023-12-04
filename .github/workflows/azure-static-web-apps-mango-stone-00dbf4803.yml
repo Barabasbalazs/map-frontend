@@ -22,6 +22,8 @@ jobs:
        with:
           node-version: 18
           cache: 'npm'
+     - name: Clear npm cache
+       run: npm cache clean --force
      - name: Install Dependencies
        run: npm install
      - name: Build Vite Project
