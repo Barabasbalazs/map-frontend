@@ -27,7 +27,7 @@ jobs:
      - name: Install Dependencies
        run: npm install
      - name: Build Vite Project
-       run: npm run build
+       run: npm run build --verbose
      - name: Deploy to Azure Static Web Apps
        id: builddeploy
        uses: Azure/static-web-apps-deploy@v1
