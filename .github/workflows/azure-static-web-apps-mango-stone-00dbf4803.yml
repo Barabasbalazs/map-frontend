@@ -15,17 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-     - uses: actions/checkout@v3
+     - name: Checkout
+       uses: actions/checkout@v4
+     - name: Set up Node
+       uses: actions/setup-node@v3
        with:
-        submodules: true
-        lfs: false
-     - name: Setup Node.js 18.x.x
-       run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install 18.0.0
-          nvm use 18.0.0
+          node-version: 18
+          cache: 'npm'
      - name: Install Dependencies
        run: yarn install
      - name: Build Vite Project
