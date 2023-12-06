@@ -10,6 +10,9 @@ class SocketService {
   private userStore = useUserStore();
 
   constructor(leafletService: LeafletService) {
+
+    console.log('configProvider.wsServerUrl', configProvider.wsServerUrl);
+
     this.socket = io(`${configProvider.wsServerUrl}/markers`);
 
     this.leafletService = leafletService;
