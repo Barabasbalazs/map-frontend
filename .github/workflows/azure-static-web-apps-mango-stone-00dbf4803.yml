@@ -28,7 +28,7 @@ jobs:
        run: npm install
      - name: Build Vite Project
       #add env variables here
-        env:
+       env:
           VITE_TILE_LAYER_SOURCE: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
           VITE_WS_SERVER_URL: "http://localhost:3001"
        run: npm run build --verbose
