@@ -37,6 +37,9 @@ jobs:
           action: "upload"
           app_location: "/" # App source code path
           output_location: "dist" # Built app content directory
+          #add env variables here
+          VITE_TILE_LAYER_SOURCE: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+          VITE_WS_SERVER_URL: "http://localhost:3001"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
