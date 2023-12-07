@@ -1,5 +1,6 @@
 <template>
-  <div class="h-screen w-screen" ref="mapContainer" />
+  <div class="h-96 w-screen" ref="mapContainer" />
+  <button @click="socketService.setUserToTrack">Init Marker</button>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +16,7 @@ onMounted(() => {
   if (mapContainer.value) {
     leafletService = new LeafletService(mapContainer, { lat: 51.505, lng: -0.09 });
     socketService = new SocketService(leafletService);
-    socketService.setUserToTrack();
+    //socketService.setUserToTrack();
   }
 });
 </script>
