@@ -4,7 +4,7 @@ import L, { Marker } from "leaflet";
 import { Coordinates } from "../types/coordinates";
 import configProvider from "../config/config-provider";
 import { User } from "../models/user-model";
-
+import markerIcon from "../assets/icons/marker.svg";
 class LeafletService {
   private mapInstance: Ref<any> = ref();
   private markerMapping: Map<string, Marker<any>>;
@@ -22,7 +22,11 @@ class LeafletService {
   public addMarker(user: User) {
     const { coords } = user;
     if (!coords) return;
-    const marker = L.marker([coords.lat, coords.lng])
+    const icon = L.icon({
+      iconUrl: markerIcon,
+      iconSize: [25, 41],
+    });
+    const marker = L.marker([coords.lat, coords.lng], { icon })
       .addTo(this.mapInstance.value)
       .bindPopup(user.name);
     this.markerMapping.set(user.id, marker);
