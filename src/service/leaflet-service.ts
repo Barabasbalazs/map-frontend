@@ -7,7 +7,7 @@ import { User } from "../models/user-model";
 import markerIcon from "../assets/icons/marker.svg";
 class LeafletService {
   private mapInstance: Ref<any> = ref();
-  private markerMapping: Map<string, Marker<any>>;
+  private markerMapping: Map<number, Marker<any>>;
 
   constructor(mapDiv: Ref<HTMLElement>, coords: Coordinates) {
     const { tileLayerSource } = configProvider;
@@ -16,7 +16,7 @@ class LeafletService {
       13
     );
     L.tileLayer(tileLayerSource).addTo(this.mapInstance.value);
-    this.markerMapping = new Map<string, Marker<any>>();
+    this.markerMapping = new Map<number, Marker<any>>();
   }
 
   public addMarker(user: User) {
