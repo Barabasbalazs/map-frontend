@@ -30,7 +30,6 @@ class LeafletService {
       .addTo(this.mapInstance.value)
       .bindPopup(user.name);
     this.markerMapping.set(user.id, marker);
-    console.log("Marker mapping: ", this.markerMapping);
   }
 
   public updateMarkers(users: User[]) {
