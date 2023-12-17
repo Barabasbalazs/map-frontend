@@ -4,7 +4,7 @@ import { User } from "../models/user-model";
 export const useUserStore = defineStore("user", {
   state: () => ({
     user: {
-      id: "1",
+      id: 1,
       name: "John Doe",
       coords: {
         lat: 51.505,

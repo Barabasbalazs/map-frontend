@@ -1,7 +1,7 @@
 import { Coordinates } from "../types/coordinates";
 
 export interface User {
-    id: string;
+    id: number;
     name: string;
     coords?: Coordinates;
 }

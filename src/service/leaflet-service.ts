@@ -30,13 +30,16 @@ class LeafletService {
       .addTo(this.mapInstance.value)
       .bindPopup(user.name);
     this.markerMapping.set(user.id, marker);
+    console.log("Marker mapping: ", this.markerMapping);
   }
 
   public updateMarkers(users: User[]) {
     users.forEach((user) => {
       const { coords } = user;
+      console.log("Updating marker for user: ", user);
       if (!coords) return;
       const marker = this.markerMapping.get(user.id);
+      console.log("Marker: ", marker);
       if (!marker) return;
       marker.setLatLng([coords.lat, coords.lng]);
     });
