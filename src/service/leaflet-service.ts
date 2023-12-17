@@ -35,10 +35,8 @@ class LeafletService {
   public updateMarkers(users: User[]) {
     users.forEach((user) => {
       const { coords } = user;
-      console.log("Updating marker for user: ", user);
       if (!coords) return;
       const marker = this.markerMapping.get(user.id);
-      console.log("Marker: ", marker);
       if (marker) {
         marker.setLatLng([coords.lat, coords.lng])
         return;
