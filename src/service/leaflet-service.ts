@@ -39,8 +39,11 @@ class LeafletService {
       if (!coords) return;
       const marker = this.markerMapping.get(user.id);
       console.log("Marker: ", marker);
-      if (!marker) return;
-      marker.setLatLng([coords.lat, coords.lng]);
+      if (marker) {
+        marker.setLatLng([coords.lat, coords.lng])
+        return;
+      };
+      this.addMarker(user);
     });
   }
 }
