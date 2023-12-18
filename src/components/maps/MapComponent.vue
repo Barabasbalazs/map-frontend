@@ -1,5 +1,5 @@
 <template>
-  <div class="h-96 w-screen" ref="mapContainer" />
+  <div class="h-screen w-screen" ref="mapContainer" />
 </template>
 
 <script setup lang="ts">

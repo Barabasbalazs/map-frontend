@@ -22,7 +22,6 @@ class SocketService {
 
   public setUserToTrack() {
     this.socket.emit("track", this.userStore.user.id);
-    this.leafletService.addMarker(this.userStore.user);
   }
 }
 
