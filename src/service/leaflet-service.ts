@@ -28,7 +28,7 @@ class LeafletService {
     });
     const marker = L.marker([coords.lat, coords.lng], { icon })
       .addTo(this.mapInstance.value)
-      .bindPopup(user.name);
+      .bindPopup(user.name, { offset: [0, -7], className: "marker-popup" });
     this.markerMapping.set(user.id, marker);
   }
 

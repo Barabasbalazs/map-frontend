@@ -19,3 +19,12 @@ onMounted(() => {
   }
 });
 </script>
+
+<!--Important note here that the style here is not scoped-->
+<!-- <style>
+.marker-popup .leaflet-popup-tip,
+.marker-popup .leaflet-popup-content-wrapper {
+    background: #e93434;
+    color: #ffffff;
+}
+</style> -->
