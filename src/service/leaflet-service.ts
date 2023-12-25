@@ -1,21 +1,38 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
-import L, { Marker } from "leaflet";
+import L, { Marker, TileLayer } from "leaflet";
 import { Coordinates } from "../types/coordinates";
-import configProvider from "../config/config-provider";
 import { User } from "../models/user-model";
 import markerIcon from "../assets/icons/marker.svg";
+import tileLayers from "../constants/tilelayers";
 class LeafletService {
   private mapInstance: Ref<any> = ref();
   private markerMapping: Map<number, Marker<any>>;
+  private tileLayers: Array<TileLayer>;
 
   constructor(mapDiv: Ref<HTMLElement>, coords: Coordinates) {
-    const { tileLayerSource } = configProvider;
-    this.mapInstance.value = L.map(mapDiv.value).setView(
-      [coords.lat, coords.lng],
-      13
+    this.tileLayers = tileLayers.map(({ source }) =>
+      L.tileLayer(source, { maxZoom: 19 })
     );
-    L.tileLayer(tileLayerSource).addTo(this.mapInstance.value);
+
+    this.mapInstance.value = L.map(mapDiv.value, {
+      layers: this.tileLayers,
+    }).setView([coords.lat, coords.lng], 13);
+
+    const layerControl = L.control
+      .layers(
+        Object.fromEntries(
+          tileLayers.map(({ name }, index) => [name, this.tileLayers[index]])
+        ),
+        {},
+        { position: "bottomright" }
+      )
+      .addTo(this.mapInstance.value);
+
+    //css classes for styling the control buttons  
+    L.DomUtil.addClass(layerControl.getContainer(), "control-layer");
+    L.DomUtil.addClass(this.mapInstance.value.zoomControl.getContainer(), "control-zoom");
+
     this.markerMapping = new Map<number, Marker<any>>();
   }
 
@@ -38,9 +55,9 @@ class LeafletService {
       if (!coords) return;
       const marker = this.markerMapping.get(user.id);
       if (marker) {
-        marker.setLatLng([coords.lat, coords.lng])
+        marker.setLatLng([coords.lat, coords.lng]);
         return;
-      };
+      }
       this.addMarker(user);
     });
   }
