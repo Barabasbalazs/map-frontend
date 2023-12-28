@@ -8,9 +8,11 @@
         Based on the input data, a path of coordinates will be generated. These
         can be tracked on the Tracking Page
       </p>
-      <form></form>
+      <SimulationInput />
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import SimulationInput from "../components/simulator/SimulationInput.vue"
+</script>
