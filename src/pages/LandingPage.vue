@@ -3,7 +3,7 @@
     <div class="flex justify-center items-center h-1/3">
       <h1 class="text-4xl text-center">Balázs's Map App</h1>
     </div>
-    <div class="flex flex-col items-center h-full w-full gap-2">
+    <div class="flex flex-col items-center h-full w-full gap-2 px-5 md:px-0">
       <a href="/tracking" class="flex items-center gap-4">
         <div class="flex items-center justify-center pr-2">
           <img class="w-8 h-8" :src="crossHairGps" alt="crossHairGps" />
