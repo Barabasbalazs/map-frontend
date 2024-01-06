@@ -14,8 +14,7 @@ const mapContainer = ref();
 onMounted(() => {
   if (mapContainer.value) {
     const leafletService = new LeafletService(mapContainer, { lat: 51.505, lng: -0.09 });
-    const socketService = new SocketService(leafletService);
-    socketService.setUserToTrack();
+    new SocketService(leafletService);
   }
 });
 </script>

@@ -3,7 +3,7 @@
     <img :src="informationOutline" alt="informationOutline" />
     <div
       v-if="isOpen"
-      class="absolute top-4 left-0 bg-white border border-black rounded-lg p-2">
+      class="absolute top-4 right-0 bg-white border border-black rounded-lg p-2">
       <p class="text-sm font-extralight">{{ text  }}</p>
     </div>
   </div>

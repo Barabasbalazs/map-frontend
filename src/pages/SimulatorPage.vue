@@ -8,11 +8,43 @@
         Based on the input data, a path of coordinates will be generated. These
         can be tracked on the Tracking Page
       </p>
-      <SimulationInput />
+      <SimulationInput :model-value="userWithParametersModel" @update:model-value="createPath"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import SimulationInput from "../components/simulator/SimulationInput.vue"
+import SimulationInput from "../components/simulator/SimulationInput.vue";
+import { UserWithParameters } from "../types/user-parameters";
+import { generateRandomizedPath } from "../utils/path-generator";
+import { ref } from "vue";
+
+const path = ref();
+
+const userWithParametersModel = ref({
+  user: {
+    id: undefined,
+    name: "",
+    coords: {
+      lat: undefined,
+      lng: undefined,
+    },
+  },
+  parameters: {
+    distance: undefined,
+    time: undefined,
+  },
+})
+
+
+function createPath(generatedData: UserWithParameters) {
+  console.log('tha event',generatedData);
+  path.value = generateRandomizedPath(
+    generatedData.user.coords,
+    generatedData.parameters.distance,
+    generatedData.parameters.time
+  );
+  console.log('tha path',path.value);
+}
 </script>
+../types/user-parameters
