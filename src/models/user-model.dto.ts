@@ -16,5 +16,5 @@ const pathParametersSchema = Joi.object({
 
 export const userParametersSchema = Joi.object({
     user: userSchema,
-    pathParameters: pathParametersSchema,
+    parameters: pathParametersSchema,
 });

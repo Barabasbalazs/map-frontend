@@ -8,7 +8,10 @@
         Based on the input data, a path of coordinates will be generated. These
         can be tracked on the Tracking Page
       </p>
-      <SimulationInput :model-value="userWithParametersModel" @update:model-value="createPath"/>
+      <SimulationInput v-if="!path" :model-value="userWithParametersModel" @update:model-value="createPath"/>
+      <div v-else>
+        {{ path }}
+      </div>
     </div>
   </div>
 </template>
@@ -38,13 +41,10 @@ const userWithParametersModel = ref({
 
 
 function createPath(generatedData: UserWithParameters) {
-  console.log('tha event',generatedData);
   path.value = generateRandomizedPath(
     generatedData.user.coords,
     generatedData.parameters.distance,
     generatedData.parameters.time
   );
-  console.log('tha path',path.value);
 }
 </script>
-../types/user-parameters
