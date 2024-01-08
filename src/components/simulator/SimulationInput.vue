@@ -44,11 +44,11 @@
           :error="errors.distance"
         />
         <BaseInput
-          v-model="model.parameters.time"
-          label="Total time"
+          v-model="model.parameters.speed"
+          label="Speed"
           type="number"
           tooltip="Km/h"
-          :error="errors.time"
+          :error="errors.speed"
         />
       </div>
     </div>
@@ -80,7 +80,7 @@ const errors = ref({
   lat: "",
   lng: "",
   distance: "",
-  time: "",
+  speed: "",
 });
 
 function mapErroMessage(errorMessage: string) {
@@ -105,7 +105,7 @@ async function validateModel() {
     lat: "",
     lng: "",
     distance: "",
-    time: "",
+    speed: "",
   };
   try {
     await userParametersSchema.validateAsync(model.value);

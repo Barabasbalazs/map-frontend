@@ -11,7 +11,7 @@ const userSchema = Joi.object({
 
 const pathParametersSchema = Joi.object({
     distance: Joi.number().min(0).required(),
-    time: Joi.number().min(0).required(),
+    speed: Joi.number().min(0).required(),
 });
 
 export const userParametersSchema = Joi.object({

@@ -2,7 +2,7 @@ import { User } from "../models/user-model";
 
 export type PathParameters = {
     distance: number;
-    time: number;
+    speed: number;
 };
 
 export type UserWithParameters = {
