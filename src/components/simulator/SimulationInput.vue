@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col gap-2">
-    <div class="flex flex-col gap-2">
-      <h2 class="text-lg">User Information:</h2>
-      <div class="flex gap-4">
+  <div class="flex flex-col gap-2 w-full">
+    <div class="flex flex-col gap-3 w-full">
+      <h3 class="text-lg">User Information</h3>
+      <div class="grid grid-cols-2 gap-4">
         <BaseInput
           v-model="model.user.id"
           label="Id"
@@ -15,8 +15,10 @@
           :error="errors.name"
         />
       </div>
-      <h2 class="text-lg">The Users starting point:</h2>
-      <div class="flex gap-4">
+    </div>
+    <div class="flex flex-col gap-3 w-full">
+      <h3 class="text-lg">The Users starting point</h3>
+      <div class="grid grid-cols-2 gap-4">
         <BaseInput
           v-model="model.user.coords.lat"
           label="Latitude"
@@ -30,8 +32,10 @@
           :error="errors.lng"
         />
       </div>
-      <h2 class="text-lg">Route specifications:</h2>
-      <div class="flex gap-4">
+    </div>
+    <div class="flex flex-col gap-3 w-full">
+      <h3 class="text-lg">Route specifications</h3>
+      <div class="grid grid-cols-2 gap-4">
         <BaseInput
           v-model="model.parameters.distance"
           label="Total distance"
@@ -47,8 +51,8 @@
           :error="errors.time"
         />
       </div>
-      <BaseButton @click="validateModel">Generate Path</BaseButton>
     </div>
+    <BaseButton @click="validateModel">Generate Path</BaseButton>
   </div>
 </template>
 
@@ -56,7 +60,7 @@
 import BaseInput from "../inputs/BaseInput.vue";
 import BaseButton from "../inputs/BaseButton.vue";
 import { UserWithParameters } from "../../types/user-parameters";
-import { userParametersSchema } from "../../models/user-model.dto";
+import { userParametersSchema } from "../../validation/user";
 import { capitalizeFirstLetter } from "../../utils/string-manipulation";
 import { ref } from "vue";
 
@@ -80,9 +84,17 @@ const errors = ref({
 });
 
 function mapErroMessage(errorMessage: string) {
-  const key = Object.keys(errors.value).find((key) => errorMessage.includes(key));
+  const key = Object.keys(errors.value).find((key) =>
+    errorMessage.includes(key)
+  );
   if (key) {
-    errors.value[key] = capitalizeFirstLetter(errorMessage.replace(/"/g, '').replace(/^[^\.]*\./, ''));
+    const errorWithoutQutes = errorMessage.replace(/"/g, "");
+    const lastDotIndex = errorWithoutQutes.lastIndexOf(".");
+    errors.value[key] = capitalizeFirstLetter(
+      lastDotIndex === -1
+        ? errorWithoutQutes
+        : errorWithoutQutes.substring(lastDotIndex + 1)
+    );
   }
 }
 
@@ -100,7 +112,7 @@ async function validateModel() {
   } catch (error) {
     mapErroMessage(error.message);
     return;
-  } 
+  }
   emit("update:modelValue", model.value);
 }
 </script>

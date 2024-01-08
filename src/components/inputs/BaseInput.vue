@@ -8,7 +8,9 @@
       v-model="modelValue"
       :type="type"
       class="border-2 border-black rounded-xl px-2 py-1 focus:border-black w-full"/>
-    <p v-if="error" class="text-red-600 whitespace-nowrap">{{ error }}</p>
+    <div class="min-h-5">
+      <p v-if="error" class="text-red-600 text-sm md:whitespace-nowrap">{{ error }}</p>
+    </div>  
   </div>
 </template>
 
