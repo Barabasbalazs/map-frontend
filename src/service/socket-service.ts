@@ -13,7 +13,6 @@ class SocketService {
     this.leafletService = leafletService;
 
     this.socket.on("update-location", (users: User[]) => {
-      console.log("Updating markers:");
       this.leafletService.updateMarkers(users);
     });
   }

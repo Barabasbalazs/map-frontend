@@ -1,8 +1,11 @@
 <template>
-    <div class="flex flex-col items-center">
-        <div class="flex flex-col w-1/3 gap-2">
+    <div class="flex flex-col items-center gap-6">
+        <div class="flex flex-col gap-2">
             <BaseInput v-model="interval" label="Interval between steps" type="number" tooltip="Seconds" :error="inputError"/>
-            <BaseButton @click="startSendingProcess">Send</BaseButton>
+            <BaseButton :disabled="isBroadcasting" @click="startSendingProcess">Send</BaseButton>
+        </div>
+        <div>
+            <p>Number of points: {{ pathOfUser.length }}</p>
         </div>
         <div class="flex flex-col gap-2">
            <p v-for="(coordinate, ind) in pathOfUser" :key="ind" >Latitude: {{ coordinate.lat }}, Longitude: {{ coordinate.lng }}</p>
@@ -25,6 +28,10 @@ const props = defineProps<{
     user: User;
 }>();
 
+const emit = defineEmits<{
+    (e: "finishedBroadcast"): void,
+}>();
+
 const pathOfUser = ref<Coordinates[]>(props.path);
 
 const interval = ref<number>(1);
@@ -33,17 +40,22 @@ const inputError = ref();
 
 const socket = ref();
 
+const isBroadcasting = ref(false);
+
 function startSendingProcess() {
     if (interval.value <= 0) {
         inputError.value = "Interval must be greater than 0";
         return;
     }
 
-    useInterval(interval.value * 1000, {
-        callback: (count: number) => {
-            if (count >= props.path.length) {
+    isBroadcasting.value = true;
+
+    const { pause } = useInterval(interval.value * 1000, {
+        callback: () => {
+            if (props.path.length === 0) {
                 socket.value.disconnect();
-                return;
+                pause();
+                emit('finishedBroadcast');
             }
             socket.value.emit('update-location', [{
                 id: props.user.id,
@@ -51,7 +63,8 @@ function startSendingProcess() {
                 coords: pathOfUser.value[0]
             }]);
             pathOfUser.value.shift();
-        },
+        }, 
+        controls: true
     });
 }
 
