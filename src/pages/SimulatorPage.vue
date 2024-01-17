@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-screen h-screen items-center">
-    <div class="flex justify-center items-center py-24">
+  <div class="flex flex-col w-screen items-center mb-12">
+    <div class="flex justify-center items-center md:py-24 py-12">
       <h1 class="text-4xl text-center">Balázs's Map App Simulator</h1>
     </div>
     <div class="flex flex-col items-center h-full w-full px-5 md:w-1/3 gap-6">
