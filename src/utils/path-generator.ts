@@ -24,11 +24,28 @@ function calculateDistance(coord1: Coordinates, coord2: Coordinates): number {
   return distance;
 }
 
+function isInputValid(start: Coordinates, distance: number, speed: number): boolean {
+  if (distance <= 0 || speed <= 0) {
+    return false;
+  }
+
+  if (start.lat < -90 || start.lat > 90 || start.lng < -180 || start.lng > 180) {
+    return false;
+  }
+
+  return true;
+}
+
 export function generateRandomizedPath(
   start: Coordinates,
   distance: number,
   speed: number
 ): Coordinates[] {
+
+  if (!isInputValid(start, distance, speed)) {
+    return [];
+  }
+
   const path: Coordinates[] = [];
   let currentDistance = 0;
   let currentCoord = start;
