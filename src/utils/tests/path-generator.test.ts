@@ -1,7 +1,8 @@
 import { expect, test } from "vitest";
 import { generateRandomizedPath } from "../path-generator";
+import { Coordinates } from "../../types/coordinates";
 
-test("no distance input tests", () => {
+test("No distance input tests", () => {
   expect(
     generateRandomizedPath(
       {
@@ -14,7 +15,7 @@ test("no distance input tests", () => {
   ).toEqual([]);
 });
 
-test("negative distance input tests", () => {
+test("Negative distance input tests", () => {
   expect(
     generateRandomizedPath(
       {
@@ -27,7 +28,7 @@ test("negative distance input tests", () => {
   ).toEqual([]);
 });
 
-test("negative speed input tests", () => {
+test("Negative speed input tests", () => {
   expect(
     generateRandomizedPath(
       {
@@ -40,7 +41,7 @@ test("negative speed input tests", () => {
   ).toEqual([]);
 });
 
-test("out of bounds coordinates test", () => {
+test("Out of bounds coordinates test", () => {
   expect(
     generateRandomizedPath(
       {
@@ -51,4 +52,32 @@ test("out of bounds coordinates test", () => {
       1
     )
   ).toEqual([]);
+})
+
+function invalidCoords(path: Coordinates[]) {
+  return path.filter((coord) => coord.lat < -90 || coord.lat > 90 || coord.lng < -180 || coord.lng > 180);
+}
+
+test("Out of bounds result test", () => {
+
+  const edgeCases = [
+    {
+      lat: -90,
+      lng: -180,
+    },
+    {
+      lat: -90,
+      lng: 180,
+    },
+    {
+      lat: 90,
+      lng: -180,
+    },
+    {
+      lat: 90,
+      lng: 180,
+    },
+  ];
+
+  edgeCases.forEach((edgeCase) => expect(invalidCoords(generateRandomizedPath(edgeCase, 100, 1)).length).toEqual(0));
 })
