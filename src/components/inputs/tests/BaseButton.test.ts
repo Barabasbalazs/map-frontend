@@ -1,6 +1,8 @@
 import BaseButtonVue from "../BaseButton.vue";
-import { shallowMount, mount } from "@vue/test-utils";
-import { test, expect, describe } from "vitest";
+import { shallowMount, mount, enableAutoUnmount } from "@vue/test-utils";
+import { test, expect, describe, afterEach } from "vitest";
+
+enableAutoUnmount(afterEach);
 
 describe("BaseButton functionality tests", () => {
   test("BaseButton slot renders correctly", () => {

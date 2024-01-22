@@ -1,7 +1,9 @@
 import BaseInput from "../BaseInput.vue";
 import ToolTip from "../ToolTip.vue";
-import { shallowMount, mount } from "@vue/test-utils";
-import { test, expect, describe } from "vitest";
+import { shallowMount, mount, enableAutoUnmount } from "@vue/test-utils";
+import { test, expect, describe, afterEach } from "vitest";
+
+enableAutoUnmount(afterEach);
 
 describe("BaseInput Rendering Tests", () => {
   test("BaseInput displays label", () => {
@@ -97,11 +99,26 @@ describe("BaseInput Rendering Tests", () => {
     expect(wrapper.find("input").attributes("type")).toBe("text");
     expect(wrapper.find("#error").exists()).toBe(false);
   });
+  test("BaseInput with different type and modelValue should not mount", () => {
+    try {
+      const wrapper = mount(BaseInput, {
+        props: {
+          label: "DDD",
+          type: "number",
+          modelValue: "initialText",
+          "onUpdate:modelValue": (e) => wrapper.setProps({ modelValue: e }),
+        },
+      });
+    } catch (e) {
+      expect(e).toBeDefined();
+    }
+  })
 });
 
 describe("BaseInput behaviour tests", () => {
-  test("BaseButton emits the entered value", async () => {
-    const wrapper = shallowMount(BaseInput, {
+  test("BaseButton emits the entered string value", async () => {
+    //this will not run with shallowMount
+    const wrapper = mount(BaseInput, {
       props: {
         label: "Enter something",
         modelValue: "initialText",
@@ -111,5 +128,44 @@ describe("BaseInput behaviour tests", () => {
 
     await wrapper.find("input").setValue("test");
     expect(wrapper.props("modelValue")).toBe("test");
+  });
+  test("BaseInput emits the entered number value", async () => {
+    const wrapper = mount(BaseInput, {
+      props: {
+        label: "Enter something",
+        modelValue: 0,
+        "onUpdate:modelValue": (e) => wrapper.setProps({ modelValue: e }),
+        type: "number",
+      },
+    });
+
+    await wrapper.find("input").setValue(2);
+    expect(wrapper.props("modelValue")).toBe(2);
+  });
+  test("ModelValue of not corresponding type should not work", async () => {
+    const wrapper = mount(BaseInput, {
+      props: {
+        label: "Enter something",
+        modelValue: 4,
+        "onUpdate:modelValue": (e) => wrapper.setProps({ modelValue: e }),
+        type: "number",
+      },
+    });
+
+    await wrapper.find("input").setValue("test");
+    expect(wrapper.props("modelValue")).toBeFalsy();
+  });
+  test("BaseInput renders error prop changes", async () => {
+    const wrapper = shallowMount(BaseInput, {
+      props: {
+        label: "Dummy text",
+      },
+    });
+
+    expect(wrapper.html()).not.toContain("Error text");
+
+    await wrapper.setProps({ error: "Error text" });
+
+    expect(wrapper.html()).toContain("Error text");
   });
 });

@@ -14,10 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import { User } from '../../models/user-model';
-import { Coordinates } from '../../types/coordinates';
 import BaseButton from '../inputs/BaseButton.vue';
 import BaseInput from '../inputs/BaseInput.vue';
+import { User } from '../../models/user-model';
+import { Coordinates } from '../../types/coordinates';
 import configProvider from "../../config/config-provider";
 import { io } from "socket.io-client";
 import { useInterval } from "@vueuse/core";
