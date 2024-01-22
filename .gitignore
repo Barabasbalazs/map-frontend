@@ -12,8 +12,9 @@ dist
 dist-ssr
 *.local
 .env.local
-/coverage
+/test-reports
 /html
+/coverage
 
 # Editor directories and files
 .vscode/*

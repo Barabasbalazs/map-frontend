@@ -60,7 +60,7 @@
 import BaseInput from "../inputs/BaseInput.vue";
 import BaseButton from "../inputs/BaseButton.vue";
 import { UserWithParameters } from "../../types/user-parameters";
-import { userParametersSchema } from "../../validation/user";
+import { userParametersSchema } from "../../validation/user-validation";
 import { capitalizeFirstLetter } from "../../utils/string-manipulation";
 import { ref } from "vue";
 

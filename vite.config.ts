@@ -10,6 +10,14 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    reporters: ['default', 'html'],
+    reporters: ["default", "html"],
+    coverage: {
+      enabled: true,
+      provider: "v8",
+      all: true,
+      clean: true,
+      cleanOnRerun: true,
+      reporter: ['text', 'json', 'html', "lcov"],
+    },
   },
 });

@@ -8,8 +8,9 @@
     "build": "vue-tsc && vite build && cp staticwebapp.config.json ./dist",
     "preview": "vite preview",
     "test": "vitest",
-    "test --ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "test:ui": "vitest --coverage --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "@vueuse/core": "^10.7.1",
@@ -28,7 +29,9 @@
   "devDependencies": {
     "@types/leaflet": "^1.9.8",
     "@vitejs/plugin-vue": "^5.0.0",
+    "@vitest/coverage-v8": "^1.2.1",
     "@vitest/ui": "^1.2.1",
+    "@vue/test-utils": "^2.4.3",
     "jsdom": "^23.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
