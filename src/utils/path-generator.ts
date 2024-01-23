@@ -24,16 +24,21 @@ function calculateDistance(coord1: Coordinates, coord2: Coordinates): number {
   return distance;
 }
 
-function isInputValid(start: Coordinates, distance: number, speed: number): boolean {
+function isCoordinateInValid(coord: Coordinates): boolean {
+  return (
+    coord.lat < -90 || coord.lat > 90 || coord.lng < -180 || coord.lng > 180
+  );
+}
+
+function isInputValid(
+  start: Coordinates,
+  distance: number,
+  speed: number
+): boolean {
   if (distance <= 0 || speed <= 0) {
     return false;
   }
-
-  if (start.lat < -90 || start.lat > 90 || start.lng < -180 || start.lng > 180) {
-    return false;
-  }
-
-  return true;
+  return (!isCoordinateInValid(start));
 }
 
 export function generateRandomizedPath(
@@ -41,7 +46,6 @@ export function generateRandomizedPath(
   distance: number,
   speed: number
 ): Coordinates[] {
-
   if (!isInputValid(start, distance, speed)) {
     return [];
   }
@@ -71,18 +75,23 @@ export function generateRandomizedPath(
       const ratio = remainingDistance / distToNext;
       const finalLat = currentCoord.lat + ratio * (nextLat - currentCoord.lat);
       const finalLon = currentCoord.lng + ratio * (nextLon - currentCoord.lng);
-      path.push({
-        lat: finalLat,
-        lng: finalLon,
-      });
-      break;
+
+      if (!isCoordinateInValid({ lat: finalLat, lng: finalLon })) {
+        path.push({
+          lat: finalLat,
+          lng: finalLon,
+        });
+        break;
+      }
     }
 
-    path.push({
-      lat: nextLat,
-      lng: nextLon,
-    });
-    currentDistance += distToNext;
+    if (!isCoordinateInValid({ lat: nextLat, lng: nextLon })) {
+      path.push({
+        lat: nextLat,
+        lng: nextLon,
+      });
+      currentDistance += distToNext;
+    }
     currentCoord = {
       lat: nextLat,
       lng: nextLon,
