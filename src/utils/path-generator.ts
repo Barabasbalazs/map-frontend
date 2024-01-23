@@ -91,11 +91,12 @@ export function generateRandomizedPath(
         lng: nextLon,
       });
       currentDistance += distToNext;
+
+      currentCoord = {
+        lat: nextLat,
+        lng: nextLon,
+      };
     }
-    currentCoord = {
-      lat: nextLat,
-      lng: nextLon,
-    };
   }
 
   return path;
