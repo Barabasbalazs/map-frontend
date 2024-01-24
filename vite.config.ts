@@ -21,12 +21,20 @@ export default defineConfig({
       reporter: ["text", "json", "html", "lcov"],
       //if coverage does not meet thresholds, test will fail and build process will be aborted
       thresholds: {
-        statements: 80,
-        branches: 80,
-        functions: 80,
-        lines: 80,
+        statements: 90,
+        branches: 90,
+        functions: 90,
+        lines: 90,
       },
-      exclude: [...configDefaults.coverage.exclude, 'src/models/**/*', 'src/constants/**/*', 'src/types/**/*', 'html/**/*', '**/*.config.{ts,js}'],
+      exclude: [
+        ...configDefaults.coverage.exclude,
+        "src/routing/**/*",
+        "src/models/**/*",
+        "src/constants/**/*",
+        "src/types/**/*",
+        "html/**/*",
+        "**/*.config.{ts,js}",
+      ],
       //if true report will be generated even if tests fail
       reportOnFailure: true,
     },

@@ -43,6 +43,8 @@ const socket = ref();
 const isBroadcasting = ref(false);
 
 function startSendingProcess() {
+    inputError.value = '';
+
     if (interval.value <= 0) {
         inputError.value = "Interval must be greater than 0";
         return;
@@ -52,7 +54,7 @@ function startSendingProcess() {
 
     const { pause } = useInterval(interval.value * 1000, {
         callback: () => {
-            if (props.path.length === 0) {
+            if (pathOfUser.value.length === 0) {
                 socket.value.disconnect();
                 pause();
                 emit('finishedBroadcast');
