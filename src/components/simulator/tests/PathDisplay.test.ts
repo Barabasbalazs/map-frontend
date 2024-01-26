@@ -1,10 +1,10 @@
 import PathDisplayVue from "../PathDisplay.vue";
 import BaseButton from "../../inputs/BaseButton.vue";
 import BaseInputVue from "../../inputs/BaseInput.vue";
-import { mount, shallowMount, enableAutoUnmount } from "@vue/test-utils";
-import { expect, test, describe, afterEach } from "vitest";
 import { User } from "../../../models/user-model";
 import { Coordinates } from "../../../types/coordinates";
+import { mount, shallowMount, enableAutoUnmount } from "@vue/test-utils";
+import { expect, test, describe, afterEach } from "vitest";
 
 enableAutoUnmount(afterEach);
 

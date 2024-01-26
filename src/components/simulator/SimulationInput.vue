@@ -5,12 +5,14 @@
       <div class="grid grid-cols-2 gap-4">
         <BaseInput
           v-model="model.user.id"
+          id="id"
           label="Id"
           type="number"
           :error="errors.id"
         />
         <BaseInput
           v-model="model.user.name"
+          id="name"
           label="Name"
           :error="errors.name"
         />
@@ -21,12 +23,14 @@
       <div class="grid grid-cols-2 gap-4">
         <BaseInput
           v-model="model.user.coords.lat"
+          id="lat"
           label="Latitude"
           type="number"
           :error="errors.lat"
         />
         <BaseInput
           v-model="model.user.coords.lng"
+          id="lng"
           label="Longitude"
           type="number"
           :error="errors.lng"
@@ -38,6 +42,7 @@
       <div class="grid grid-cols-2 gap-4">
         <BaseInput
           v-model="model.parameters.distance"
+          id="distance"
           label="Total distance"
           type="number"
           tooltip="Km"
@@ -45,6 +50,7 @@
         />
         <BaseInput
           v-model="model.parameters.speed"
+          id="speed"
           label="Speed"
           type="number"
           tooltip="Km/h"

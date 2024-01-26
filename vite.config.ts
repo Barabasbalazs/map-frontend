@@ -28,7 +28,7 @@ export default defineConfig({
       },
       exclude: [
         ...configDefaults.coverage.exclude,
-        "src/routing/**/*",
+        "src/main.ts",
         "src/models/**/*",
         "src/constants/**/*",
         "src/types/**/*",
