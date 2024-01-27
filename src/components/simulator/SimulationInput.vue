@@ -63,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import BaseInput from "../inputs/BaseInput.vue";
-import BaseButton from "../inputs/BaseButton.vue";
+import BaseInput from "../shared/BaseInput.vue";
+import BaseButton from "../shared/BaseButton.vue";
 import { UserWithParameters } from "../../types/user-parameters";
 import { userParametersSchema } from "../../validation/user-validation";
 import { capitalizeFirstLetter } from "../../utils/string-manipulation";
@@ -121,4 +121,4 @@ async function validateModel() {
   }
   emit("update:modelValue", model.value);
 }
-</script>
+</script>../shared/BaseInput.vue../shared/BaseButton.vue

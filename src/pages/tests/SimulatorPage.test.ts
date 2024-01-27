@@ -11,7 +11,7 @@ import {
 } from "@vue/test-utils";
 import { expect, test, describe, afterEach, beforeEach } from "vitest";
 import router from "../../routing/router";
-import BaseInputVue from "../../components/inputs/BaseInput.vue";
+import BaseInputVue from "../../components/shared/BaseInput.vue";
 
 enableAutoUnmount(afterEach);
 

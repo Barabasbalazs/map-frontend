@@ -6,14 +6,19 @@
 <script setup lang="ts">
 import LeafletService from "../../service/leaflet-service";
 import SocketService from "../../service/socket-service";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 
 const mapContainer = ref();
+let socketService: SocketService;
 
 onMounted(() => {
   if (mapContainer.value) {
     const leafletService = new LeafletService(mapContainer, { lat: 51.505, lng: -0.09 });
-    new SocketService(leafletService);
+    socketService = new SocketService(leafletService);
   }
+});
+
+onBeforeUnmount(() => {
+  socketService.destroy();
 });
 </script>

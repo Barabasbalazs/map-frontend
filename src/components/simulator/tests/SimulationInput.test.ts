@@ -1,6 +1,6 @@
 import SimulationInput from "../SimulationInput.vue";
-import BaseInput from "../../inputs/BaseInput.vue";
-import BaseButton from "../../inputs/BaseButton.vue";
+import BaseInput from "../../shared/BaseInput.vue";
+import BaseButton from "../../shared/BaseButton.vue";
 import { enableAutoUnmount, shallowMount, mount } from "@vue/test-utils";
 import { describe, test, afterEach, expect } from "vitest";
 import { UserWithParameters } from "../../../types/user-parameters";
