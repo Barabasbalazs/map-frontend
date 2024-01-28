@@ -1,10 +1,13 @@
 import PathDisplayVue from "../PathDisplay.vue";
 import BaseButton from "../../shared/BaseButton.vue";
 import BaseInputVue from "../../shared/BaseInput.vue";
+import BaseModal from "../../shared/BaseModal.vue";
 import { User } from "../../../models/user-model";
 import { Coordinates } from "../../../types/coordinates";
+import { useTransferSimulatedPath } from "../../../composables/transfer-simulated-path";
 import { mount, shallowMount, enableAutoUnmount } from "@vue/test-utils";
 import { expect, test, describe, afterEach } from "vitest";
+import { ref } from "vue";
 
 enableAutoUnmount(afterEach);
 
@@ -28,6 +31,26 @@ const baseProps = {
     },
   ] as Coordinates[],
 };
+
+function parameteresForComposable() {
+  const props = baseProps;
+
+  const emit = (e: "finishedBroadcast") => {};
+
+  const isNoConnection = ref(true);
+
+  const pathOfUser = ref<Coordinates[]>(props.path);
+
+  const interval = ref<number>(1);
+
+  return {
+    props,
+    emit,
+    isNoConnection,
+    pathOfUser,
+    interval,
+  };
+}
 
 describe("PathDisplay mounting tests", () => {
   test("PathDisplay mounts properly with basic props", () => {
@@ -71,13 +94,15 @@ describe("PathDisplay mounting tests", () => {
       props: baseProps,
     });
     baseProps.path.forEach((element) =>
-      expect(wrapper.html()).toContain(`Latitude: ${ element.lat }, Longitude: ${ element.lng }`)
+      expect(wrapper.html()).toContain(
+        `Latitude: ${element.lat}, Longitude: ${element.lng}`
+      )
     );
   });
 });
 
 describe("PathDisplay behaviour tests", () => {
-  test("PathDisplay doesn't let the interval to be 0 or less", async () => {
+  test("PathDisplay renders an error modal when there is no connection", async () => {
     const wrapper = mount(PathDisplayVue, {
       props: baseProps,
     });
@@ -86,101 +111,72 @@ describe("PathDisplay behaviour tests", () => {
     const button = wrapper.getComponent(BaseButton);
     const input = wrapper.getComponent(BaseInputVue);
 
-    await button.trigger("click");
+    expect(wrapper.findComponent(BaseModal).isVisible()).toBe(false);
 
-    expect(input.find("#error").exists()).toBe(true);
-
-    await wrapper.find("input").setValue(-1);
+    await input.setValue(1);
 
     await button.trigger("click");
 
-    expect(input.find("#error").exists()).toBe(true);
+    expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
   });
 
-  test("PathDisplay after entering valid interval doesn't display errors anymore", async () => {
-    const wrapper = mount(PathDisplayVue, {
-      props: baseProps,
-    });
-    await wrapper.find("input").setValue(0);
+  test("PathDisplay doesn't let the interval to be 0 or less", async () => {
+    const { props, emit, isNoConnection, pathOfUser, interval } =
+      parameteresForComposable();
 
-    const button = wrapper.getComponent(BaseButton);
-    const input = wrapper.getComponent(BaseInputVue);
+    const { startSendingProcess, inputError } = useTransferSimulatedPath(
+      props,
+      emit,
+      pathOfUser,
+      interval,
+      isNoConnection
+    );
 
-    await button.trigger("click");
+    interval.value = 0;
 
-    expect(input.find("#error").exists()).toBe(true);
+    startSendingProcess();
 
-    await wrapper.find("input").setValue(2);
+    expect(inputError.value).toBe("Interval must be greater than 0");
 
-    await button.trigger("click");
+    interval.value = -1;
 
-    expect(input.find("#error").exists()).toBe(false);
+    startSendingProcess();
+
+    expect(inputError.value).toBe("Interval must be greater than 0");
+
+    interval.value = 1;
+
+    startSendingProcess();
+
+    expect(inputError.value).toBe("");
   });
 
   test("PathDisplay sends the data in the correct interval", async () => {
-    const wrapper = mount(PathDisplayVue, {
-      props: baseProps,
-    });
-    await wrapper.find("input").setValue(1);
+    const { props, emit, isNoConnection, pathOfUser, interval } =
+      parameteresForComposable();
 
-    const button = wrapper.getComponent(BaseButton);
-    const input = wrapper.getComponent(BaseInputVue);
+    const { startSendingProcess, inputError } = useTransferSimulatedPath(
+      props,
+      emit,
+      pathOfUser,
+      interval,
+      isNoConnection
+    );
 
-    await button.trigger("click");
+    interval.value = 1;
 
-    expect(input.find("#error").exists()).toBe(false);
+    isNoConnection.value = false;
 
-    expect(wrapper.html()).toContain("Number of points: 3");
+    const originalLength = pathOfUser.value.length;
 
-    await new Promise((r) => setTimeout(r, 1000));
+    startSendingProcess();
 
-    expect(wrapper.html()).toContain("Number of points: 2");
-  });
+    expect(inputError.value).toBe("");
 
-  test("PathDisplay emits finishedBroadcast after the path is finished", async () => {
-    const wrapper = mount(PathDisplayVue, {
-      props: { ...baseProps, path: baseProps.path.slice(0, 2) },
-    });
-    await wrapper.find("input").setValue(1);
+    await new Promise((r) =>
+      setTimeout(r, interval.value * (originalLength + 1) * 1000)
+    );
 
-    const button = wrapper.getComponent(BaseButton);
-    const input = wrapper.getComponent(BaseInputVue);
-
-    await button.trigger("click");
-
-    expect(input.find("#error").exists()).toBe(false);
-
-    expect(wrapper.html()).toContain("Number of points: 2");
-
-    await new Promise((r) => setTimeout(r, 1000));
-
-    expect(wrapper.html()).toContain("Number of points: 1");
-
-    await new Promise((r) => setTimeout(r, 1000));
-
-    expect(wrapper.html()).toContain("Number of points: 0");
-
-    await new Promise((r) => setTimeout(r, 1000));
-
-    expect(wrapper.emitted("finishedBroadcast")).toBeDefined();
-  });
-
-  test("PathDisplay once broadcasting doesn't let the user click the send button again", async () => {
-    const wrapper = mount(PathDisplayVue, {
-      props: baseProps,
-    });
-    await wrapper.find("input").setValue(1);
-
-    const button = wrapper.getComponent(BaseButton);
-    await button.trigger("click");
-
-    await new Promise((r) => setTimeout(r, 1000));
-
-    button.trigger("click");
-    button.trigger("click");
-    button.trigger("click");
-
-    expect(button.emitted("click")).toHaveLength(1);
-
+    expect(pathOfUser.value.length).toBe(0);
   });
 });

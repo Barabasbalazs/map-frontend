@@ -21,7 +21,12 @@
       </p>
     </div>
   </div>
-  <BaseModal v-model:is-open="isModalOpen" title="Test" text="Blabajsbdiasbdua asdyuavd vatsdvastvd  asdyat" cancel warning />
+  <BaseModal
+    v-model:is-open="isModalOpen"
+    title="Error"
+    text="There was an error while trying to establish connection"
+    warning
+  />
 </template>
 
 <script setup lang="ts">
@@ -30,10 +35,8 @@ import BaseInput from "../shared/BaseInput.vue";
 import BaseModal from "../shared/BaseModal.vue";
 import { User } from "../../models/user-model";
 import { Coordinates } from "../../types/coordinates";
-import configProvider from "../../config/config-provider";
-import { io } from "socket.io-client";
-import { useInterval } from "@vueuse/core";
-import { onMounted, ref } from "vue";
+import { ref, onBeforeUnmount } from "vue";
+import { useTransferSimulatedPath } from "../../composables/transfer-simulated-path";
 
 const props = defineProps<{
   path: Coordinates[];
@@ -44,49 +47,24 @@ const emit = defineEmits<{
   (e: "finishedBroadcast"): void;
 }>();
 
-const isModalOpen = ref(false);
+const isNoConnection = ref(true);
 
 const pathOfUser = ref<Coordinates[]>(props.path);
 
 const interval = ref<number>(1);
 
-const inputError = ref();
+const {
+  isModalOpen,
+  inputError,
+  isBroadcasting,
+  startSendingProcess,
+  socket,
+} = useTransferSimulatedPath(props, emit, pathOfUser, interval, isNoConnection);
 
-const socket = ref();
-
-const isBroadcasting = ref(false);
-
-function startSendingProcess() {
-  inputError.value = "";
-
-  if (interval.value <= 0) {
-    inputError.value = "Interval must be greater than 0";
+onBeforeUnmount(() => {
+  if (isNoConnection.value) {
     return;
   }
-
-  isBroadcasting.value = true;
-
-  const { pause } = useInterval(interval.value * 1000, {
-    callback: () => {
-      if (pathOfUser.value.length === 0) {
-        socket.value.disconnect();
-        pause();
-        emit("finishedBroadcast");
-      }
-      socket.value.emit("update-location", [
-        {
-          id: props.user.id,
-          name: props.user.name,
-          coords: pathOfUser.value[0],
-        },
-      ]);
-      pathOfUser.value.shift();
-    },
-    controls: true,
-  });
-}
-
-onMounted(() => {
-  socket.value = io(`${configProvider.wsServerUrl}/updates`);
+  socket.value.disconnect();
 });
 </script>

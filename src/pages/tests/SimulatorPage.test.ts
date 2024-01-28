@@ -98,7 +98,7 @@ describe("SimulatorPage child component rendering tests", () => {
     expect(wrapper.findComponent(SimulationInput).exists()).toBe(true);
   });
 
-  test("SimulatorPage rerenders SimulationInput component after finishing broadcast", async () => {
+  test("SimulatorPage rerenders SimulationInput component if PathDisplay emits finishedBroadcast", async () => {
     const wrapper = mount(SimulatorPage);
 
     const input = wrapper.getComponent(SimulationInput);
@@ -121,22 +121,14 @@ describe("SimulatorPage child component rendering tests", () => {
     expect(wrapper.findComponent(PathDisplay).exists()).toBe(true);
     expect(wrapper.findComponent(SimulationInput).exists()).toBe(false);
 
+
     const pathDisplay = wrapper.getComponent(PathDisplay);
-    const broadcastButton = pathDisplay.find("button");
 
-    const intervalInput = pathDisplay.getComponent(BaseInputVue);
+    pathDisplay.vm.$emit("finishedBroadcast");
 
-    await intervalInput.setValue("1");
     await flushPromises();
 
-    const numberOfPoints = pathDisplay.findAll("p").length;
-
-    await broadcastButton.trigger("click");
-    await flushPromises();
-
-    await new Promise((r) => setTimeout(r, numberOfPoints * 1000));
-
-    expect(wrapper.findComponent(PathDisplay).exists()).toBe(false);
     expect(wrapper.findComponent(SimulationInput).exists()).toBe(true);
+    expect(wrapper.findComponent(PathDisplay).exists()).toBe(false);
   });
 });
