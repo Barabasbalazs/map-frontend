@@ -2,6 +2,7 @@ import App from "../../App.vue";
 import LandingPage from "../LandingPage.vue";
 import SimulatorPage from "../SimulatorPage.vue";
 import TrackingPage from "../TrackingPage.vue";
+import MapComponentVue from "../../components/maps/MapComponent.vue";
 import { Router, createRouter, createWebHistory } from "vue-router";
 import {
   mount,
@@ -67,8 +68,12 @@ describe("LandinPage navigation test", () => {
         expect(push).toHaveBeenCalledTimes(1)
         expect(push).toHaveBeenCalledWith('/tracking')
 
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        await flushPromises();
+
         expect(wrapper.findComponent(LandingPage).exists()).toBe(false);
-        expect(wrapper.findComponent(TrackingPage).exists()).toBe(true);
+        expect(wrapper.findComponent(MapComponentVue).exists()).toBe(true);
         expect(localRouter.currentRoute.value.path).toBe("/tracking");
     });
 

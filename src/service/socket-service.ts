@@ -6,23 +6,41 @@ import LeafletService from "./leaflet-service";
 class SocketService {
   #socket: Socket;
   #leafletService: LeafletService;
+  #isConnectionError: boolean;
 
-  constructor(leafletService: LeafletService) {
-    this.#socket = io(`${configProvider.wsServerUrl}/markers`);
+  public getConnectionError() {
+    return this.#isConnectionError;
+  }
 
-    this.#socket.on("error", (error: any) => {
-      console.log('err',error);
+  public setUpSocket() {
+    this.#socket = io(`${configProvider.wsServerUrl}/markers`, {
+      reconnection: false,
     });
 
-    this.#socket.on("connect_error", (error: any) => {
-      console.log('err',error);
+    this.#socket.on("connect", () => {
+      this.#isConnectionError = false;
     });
 
-    this.#leafletService = leafletService;
+    this.#socket.on("error", () => {
+      this.#isConnectionError = true;
+    });
+
+    this.#socket.on("connect_error", () => {
+      this.#isConnectionError = true;
+    });
 
     this.#socket.on("update-location", (users: User[]) => {
       this.#leafletService.updateMarkers(users);
     });
+
+    this.#socket.on("disconnect", () => {
+      this.#isConnectionError = true;
+    });
+  }
+
+  constructor(leafletService: LeafletService) {
+    this.#leafletService = leafletService;
+    this.setUpSocket();
   }
 
   public destroy() {
