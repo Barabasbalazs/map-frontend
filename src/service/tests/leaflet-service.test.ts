@@ -19,7 +19,7 @@ describe('LeafletService tests', () => {
 
     leafletService.addMarker(user);
 
-    const marker = leafletService['markerMapping'].get(user.id);
+    const marker = leafletService.getMarkerMapping().get(user.id);
 
     expect(marker).toBeDefined();
     expect(marker.getLatLng().lat).toBe(coords.lat);
@@ -39,8 +39,8 @@ describe('LeafletService tests', () => {
     // Update markers with a new user list
     leafletService.updateMarkers([user1, user2]);
 
-    const marker1 = leafletService['markerMapping'].get(user1.id);
-    const marker2 = leafletService['markerMapping'].get(user2.id);
+    const marker1 = leafletService.getMarkerMapping().get(user1.id);
+    const marker2 = leafletService.getMarkerMapping().get(user2.id);
 
     // Check that the first marker has been updated and the second one has been added
     expect(marker1).toBeDefined();

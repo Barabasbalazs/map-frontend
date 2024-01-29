@@ -10,6 +10,10 @@ class LeafletService {
   #markerMapping: Map<number, Marker<any>>;
   #tileLayers: Array<TileLayer>;
 
+  public getMarkerMapping() {
+    return this.#markerMapping;
+  }
+
   constructor(mapDiv: Ref<HTMLElement>, coords: Coordinates) {
     this.#tileLayers = tileLayers.map(({ source }) =>
       L.tileLayer(source, { maxZoom: 19 })
