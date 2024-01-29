@@ -35,7 +35,7 @@ import BaseInput from "../shared/BaseInput.vue";
 import BaseModal from "../shared/BaseModal.vue";
 import { User } from "../../models/user-model";
 import { Coordinates } from "../../types/coordinates";
-import { ref, onBeforeUnmount } from "vue";
+import { ref, onBeforeUnmount, onMounted } from "vue";
 import { useTransferSimulatedPath } from "../../composables/transfer-simulated-path";
 
 const props = defineProps<{
@@ -59,7 +59,10 @@ const {
   isBroadcasting,
   startSendingProcess,
   socket,
+  setupSocket,
 } = useTransferSimulatedPath(props, emit, pathOfUser, interval, isNoConnection);
+
+onMounted(() => setupSocket());
 
 onBeforeUnmount(() => {
   if (isNoConnection.value) {

@@ -37,6 +37,10 @@ export function useTransferSimulatedPath(
       isNoConnection.value = true;
       isModalOpen.value = true;
     });
+    socket.value.on("error", () => {
+      isNoConnection.value = true;
+      isModalOpen.value = true;
+    })
   }
 
   function startSendingProcess() {
@@ -84,5 +88,6 @@ export function useTransferSimulatedPath(
     isBroadcasting,
     startSendingProcess,
     socket,
+    setupSocket
   };
 }

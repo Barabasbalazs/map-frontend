@@ -15,7 +15,7 @@
       <slot v-else />
       <div class="flex gap-2 pt-1">
         <BaseButton id="modal-confirmation-button" class="min-w-16" @click="confirmAction">Ok</BaseButton>
-        <BaseButton v-if="cancel" class="min-w-16" id="modal-cancel-button" @click="cancelAction">Cancel</BaseButton>
+        <BaseButton v-if="cancel" class="min-w-16" id="modal-cancel-button" secondary @click="cancelAction">Cancel</BaseButton>
       </div>
     </div>
   </div>
@@ -48,5 +48,4 @@ function cancelAction() {
   emit("cancel");
   isOpen.value = false;
 }
-
 </script>

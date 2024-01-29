@@ -104,4 +104,15 @@ describe("BaseButton functionality tests", () => {
 
     expect(wrapper.classes()).toContain("cursor-not-allowed");
   });
+
+  test("BaseButton has black text and white background when passing secondary prop", () => {
+    const wrapper = shallowMount(BaseButtonVue, {
+      props: {
+        secondary: true,
+      },
+    });
+
+    expect(wrapper.classes()).not.toContain("bg-black");
+    expect(wrapper.classes()).not.toContain("text-white");
+  });
 });

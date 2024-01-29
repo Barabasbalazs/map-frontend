@@ -4,29 +4,29 @@ import { User } from "../models/user-model";
 import LeafletService from "./leaflet-service";
 
 class SocketService {
-  private socket: Socket;
-  private leafletService: LeafletService;
+  #socket: Socket;
+  #leafletService: LeafletService;
 
   constructor(leafletService: LeafletService) {
-    this.socket = io(`${configProvider.wsServerUrl}/markers`);
+    this.#socket = io(`${configProvider.wsServerUrl}/markers`);
 
-    this.socket.on("error", (error: any) => {
+    this.#socket.on("error", (error: any) => {
       console.log('err',error);
     });
 
-    this.socket.on("connect_error", (error: any) => {
+    this.#socket.on("connect_error", (error: any) => {
       console.log('err',error);
     });
 
-    this.leafletService = leafletService;
+    this.#leafletService = leafletService;
 
-    this.socket.on("update-location", (users: User[]) => {
-      this.leafletService.updateMarkers(users);
+    this.#socket.on("update-location", (users: User[]) => {
+      this.#leafletService.updateMarkers(users);
     });
   }
 
   public destroy() {
-    this.socket.disconnect();
+    this.#socket.disconnect();
   }
 }
 
