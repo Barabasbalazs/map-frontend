@@ -38,7 +38,6 @@ onMounted(async () => {
     socketService.setUpSocket();
     await new Promise((resolve) => setTimeout(resolve, 1000));
     isErrorModalOpen.value = socketService.getConnectionError();
-    console.log("isErrorModalOpen.value", isErrorModalOpen.value);
   }
 });
 

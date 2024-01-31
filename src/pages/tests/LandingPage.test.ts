@@ -1,7 +1,6 @@
 import App from "../../App.vue";
 import LandingPage from "../LandingPage.vue";
 import SimulatorPage from "../SimulatorPage.vue";
-import TrackingPage from "../TrackingPage.vue";
 import MapComponentVue from "../../components/maps/MapComponent.vue";
 import { Router, createRouter, createWebHistory } from "vue-router";
 import {
