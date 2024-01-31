@@ -35,7 +35,7 @@ const baseProps = {
 function parameteresForComposable() {
   const props = baseProps;
 
-  const emit = (e: "finishedBroadcast") => {};
+  const emit = (_e: "finishedBroadcast") => {};
 
   const isNoConnection = ref(true);
 
