@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .env.local
+.env
 /test-reports
 /html
 /coverage
