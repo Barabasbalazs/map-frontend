@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 import BaseModal from "../shared/BaseModal.vue";
-import LeafletService from "../../service/leaflet-service";
-import SocketService from "../../service/socket-service";
+import LeafletService from "../../services/leaflet-service";
+import SocketService from "../../services/socket-service";
 import router from "../../routing/router";
 import { onMounted, ref, onBeforeUnmount } from "vue";
 
