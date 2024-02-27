@@ -121,7 +121,6 @@ describe("SimulatorPage child component rendering tests", () => {
     expect(wrapper.findComponent(PathDisplay).exists()).toBe(true);
     expect(wrapper.findComponent(SimulationInput).exists()).toBe(false);
 
-
     const pathDisplay = wrapper.getComponent(PathDisplay);
 
     pathDisplay.vm.$emit("finishedBroadcast");

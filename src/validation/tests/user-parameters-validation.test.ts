@@ -1,18 +1,21 @@
-import { userParametersSchema } from "../user-validation";
+import { userParametersSchema } from "../user-parameters-validation";
 import { test, expect, describe } from "vitest";
 
-describe("User and parameters validator tests", () => {
+const user = {
+  id: 1,
+  name: "test",
+  coords: {
+    lat: 10,
+    lng: 10,
+  },
+  email: "test@mail.ccom",
+}
+
+describe("Parameters validator tests", () => {
   test("No distance validation test", async () => {
     try {
       await userParametersSchema.validateAsync({
-        user: {
-          id: 1,
-          name: "test",
-          coords: {
-            lat: 10,
-            lng: 10,
-          },
-        },
+        user,
         parameters: {
           distance: 0,
           speed: 10,
@@ -26,14 +29,7 @@ describe("User and parameters validator tests", () => {
   test("Negative distance validation test", async () => {
     try {
       await userParametersSchema.validateAsync({
-        user: {
-          id: 1,
-          name: "test",
-          coords: {
-            lat: 10,
-            lng: 10,
-          },
-        },
+        user,
         parameters: {
           distance: -1,
           speed: 10,
@@ -47,14 +43,7 @@ describe("User and parameters validator tests", () => {
   test("Negative speed validation test", async () => {
     try {
       await userParametersSchema.validateAsync({
-        user: {
-          id: 1,
-          name: "test",
-          coords: {
-            lat: 10,
-            lng: 10,
-          },
-        },
+       user,
         parameters: {
           distance: 1,
           speed: -1,
@@ -68,14 +57,7 @@ describe("User and parameters validator tests", () => {
   test("Zero Speed validation test", async () => {
     try {
       await userParametersSchema.validateAsync({
-        user: {
-          id: 1,
-          name: "test",
-          coords: {
-            lat: 10,
-            lng: 10,
-          },
-        },
+        user,
         parameters: {
           distance: 1,
           speed: 0,
@@ -90,8 +72,7 @@ describe("User and parameters validator tests", () => {
     try {
       await userParametersSchema.validateAsync({
         user: {
-          id: 1,
-          name: "test",
+          ...user,
           coords: {
             lat: -91,
             lng: 181,
@@ -117,6 +98,7 @@ describe("User and parameters validator tests", () => {
             lat: 10,
             lng: 10,
           },
+          email: "test@mail.com"
         },
         parameters: {
           distance: 1,
@@ -152,8 +134,7 @@ describe("User and parameters validator tests", () => {
       try {
         await userParametersSchema.validateAsync({
           user: {
-            id: 1,
-            name: "test",
+            ...user,
             coords: coord,
           },
           parameters: {

@@ -66,7 +66,7 @@
 import BaseInput from "../shared/BaseInput.vue";
 import BaseButton from "../shared/BaseButton.vue";
 import { UserWithParameters } from "../../types/user-parameters";
-import { userParametersSchema } from "../../validation/user-validation";
+import { userParametersSchema } from "../../validation/user-parameters-validation";
 import { capitalizeFirstLetter } from "../../utils/string-manipulation";
 import { ref } from "vue";
 
@@ -121,4 +121,4 @@ async function validateModel() {
   }
   emit("update:modelValue", model.value);
 }
-</script>../shared/BaseInput.vue../shared/BaseButton.vue
+</script>../shared/BaseInput.vue../shared/BaseButton.vue../../validation/user-parameters-validation

@@ -16,6 +16,7 @@ const emptyProps = {
         lat: 0,
         lng: 0,
       },
+      email: "test@mail.com",
     },
     parameters: {
       distance: 0,
@@ -33,6 +34,7 @@ const baseProps = {
         lat: 51.507,
         lng: 0.1,
       },
+      email: "test@mail2.com",
     },
     parameters: {
       distance: 10,
@@ -228,7 +230,6 @@ describe("SimulationInput input validation tests", () => {
   });
 });
 
-
 describe("SimulationInput correct input tests", () => {
   test("SimulationInput emits update:modelValue with valid input", async () => {
     const wrapper = mount(SimulationInput, {
@@ -271,5 +272,5 @@ describe("SimulationInput correct input tests", () => {
     await confirmationButton.trigger("click");
 
     expect(wrapper.emitted()).toHaveProperty("update:modelValue");
-  })
+  });
 });

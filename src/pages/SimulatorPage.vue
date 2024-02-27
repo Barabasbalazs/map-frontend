@@ -31,7 +31,7 @@ const userWithParametersModel = ref({
   user: {
     id: undefined,
     name: "",
-    email: "",
+    email: "email@email.com",
     coords: {
       lat: 51.507,
       lng: 0.1,

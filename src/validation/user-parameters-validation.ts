@@ -6,7 +6,8 @@ const userSchema = Joi.object({
     coords: Joi.object({
         lat: Joi.number().required().min(-90).max(90),
         lng: Joi.number().required().max(180).min(-180),
-    })
+    }),
+    email: Joi.string().email().required(),
 });
 
 const pathParametersSchema = Joi.object({

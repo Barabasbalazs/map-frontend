@@ -7,10 +7,12 @@ interface RequestSettings<T> {
 }
 
 function headers(authToken: string) {
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${authToken}`,
-  };
+  return authToken
+    ? {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      }
+    : { "Content-Type": "application/json" };
 }
 
 export const request = {
@@ -59,7 +61,7 @@ export const request = {
       mode: "cors",
       body: options.params ? JSON.stringify(options.params) : "{}",
     });
-  }
+  },
 };
 
 export const parseResponse = async (resp: Response) => {
