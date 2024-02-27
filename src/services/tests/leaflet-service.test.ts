@@ -1,20 +1,20 @@
-import LeafletService from '../leaflet-service';
-import { describe, test, expect } from 'vitest';
-import { ref } from 'vue';
+import LeafletService from "../leaflet-service";
+import { describe, test, expect } from "vitest";
+import { ref } from "vue";
 
-describe('LeafletService tests', () => {
-  test('Creates an instance of LeafletService', () => {
-    const mapDiv = ref(document.createElement('div'));
+describe("LeafletService tests", () => {
+  test("Creates an instance of LeafletService", () => {
+    const mapDiv = ref(document.createElement("div"));
     const coords = { lat: 51.505, lng: -0.09 };
     const leafletService = new LeafletService(mapDiv, coords);
 
     expect(leafletService).toBeDefined();
   });
 
-  test('Adds a marker to the map', () => {
-    const mapDiv = ref(document.createElement('div'));
+  test("Adds a marker to the map", () => {
+    const mapDiv = ref(document.createElement("div"));
     const coords = { lat: 51.505, lng: -0.09 };
-    const user = { id: 1, name: 'John Doe', coords };
+    const user = { id: 1, name: "John Doe", coords, email: "ttt@mail.com" };
     const leafletService = new LeafletService(mapDiv, coords);
 
     leafletService.addMarker(user);
@@ -26,11 +26,11 @@ describe('LeafletService tests', () => {
     expect(marker.getLatLng().lng).toBe(coords.lng);
   });
 
-  test('Updates markers on the map', () => {
-    const mapDiv = ref(document.createElement('div'));
+  test("Updates markers on the map", () => {
+    const mapDiv = ref(document.createElement("div"));
     const coords = { lat: 51.505, lng: -0.09 };
-    const user1 = { id: 1, name: 'John Doe', coords };
-    const user2 = { id: 2, name: 'Jane Doe', coords: { lat: 52.0, lng: -0.1 } };
+    const user1 = { id: 1, name: "John Doe", coords, email: "tt2@mail.com" };
+    const user2 = { id: 2, name: "Jane Doe", coords: { lat: 52.0, lng: -0.1 }, email: "rr@mail.com" };
 
     const leafletService = new LeafletService(mapDiv, coords);
 
