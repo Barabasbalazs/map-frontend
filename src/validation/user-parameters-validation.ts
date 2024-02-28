@@ -3,11 +3,11 @@ import Joi from 'joi';
 const userSchema = Joi.object({
     id: Joi.number().min(1).required(),
     name: Joi.string().required(),
+    email: Joi.string().email({ tlds: { allow: false } }).required(),
     coords: Joi.object({
         lat: Joi.number().required().min(-90).max(90),
         lng: Joi.number().required().max(180).min(-180),
     }),
-    email: Joi.string().email().required(),
 });
 
 const pathParametersSchema = Joi.object({
