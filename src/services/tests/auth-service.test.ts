@@ -1,11 +1,8 @@
 import { describe, test, expect, vi } from "vitest";
 import { authService } from "../auth-service";
+import { createFetchResponse } from "../../utils/testing-utilites";
 
 const userCredentials = { email: "test@mail.com", password: "123456789" };
-
-function createFetchResponse(data: any) {
-  return { json: () => new Promise((resolve) => resolve(data)) };
-}
 
 describe("auth-service tests", () => {
   test("Login calls the correct endpoint", async () => {

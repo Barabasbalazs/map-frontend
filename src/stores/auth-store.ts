@@ -8,7 +8,7 @@ export const useAuthStore = defineStore("auth", {
     authToken: "" as string,
   }),
   actions: {
-    async login(user: User): Promise<Partial<User> | null> {
+    async login(user: Partial<User>): Promise<Partial<User> | null> {
       const response = await authService.login(user.email, user.password);
       if (response) {
         this.user = response.user;

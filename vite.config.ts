@@ -33,6 +33,7 @@ export default defineConfig({
         "src/constants/**/*",
         "src/types/**/*",
         "html/**/*",
+        "src/utils/testing-utilites.ts",
         "**/*.config.{ts,js}",
       ],
       //if true report will be generated even if tests fail
