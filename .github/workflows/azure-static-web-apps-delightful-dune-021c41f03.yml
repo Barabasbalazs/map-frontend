@@ -31,7 +31,9 @@ jobs:
           app_location: "/" # App source code path
           output_location: "dist" # Built app content directory
        env:
-        VITE_WS_SERVER_URL: https://map-app-socket-server.azurewebsites.net   
+        VITE_WS_SERVER_URL: https://map-app-socket-server.azurewebsites.net
+        VITE_API_URL: https://api-for-map-app.azurewebsites.net
+        VITE_API_VERSION: v1
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
