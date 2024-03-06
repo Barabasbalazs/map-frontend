@@ -21,6 +21,15 @@ export const useAuthStore = defineStore("auth", {
       this.user = {} as User;
       this.authToken = "";
     },
+    async register(user: Partial<User>): Promise<Partial<User> | null> {
+      const response = await authService.register(user);
+      if (response) {
+        this.user = response.user;
+        this.authToken = response.authToken;
+        return this.user;
+      }
+      return null;
+    },
   },
   persist: {
     enabled: true,

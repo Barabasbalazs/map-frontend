@@ -1,24 +1,44 @@
 <template>
   <div class="flex flex-col gap-1">
-    <div class="flex justify-between items-center">
+    <div v-if="typeRef !== 'checkbox'" class="flex justify-between items-center">
       <p class="whitespace-nowrap">{{ label }}:</p>
-      <ToolTip v-if="tooltip" :text="tooltip"/>
+      <ToolTip v-if="tooltip" :text="tooltip" />
     </div>
-    <input
-      v-model="modelValue"
-      :type="type"
-      class="border-2 border-black rounded-xl px-2 py-1 focus:border-black w-full"/>
+    <div class="flex gap-1">
+      <input
+        v-model="modelValue"
+        :type="typeRef"
+        class="border-2 border-black rounded-xl px-2 py-1 focus:border-black"
+        :class="{ 'w-full' : typeRef !== 'checkbox'}"
+      />
+      <label v-if="typeRef === 'checkbox'" class="pl-2">{{ label }}</label>
+      <button v-if="type === 'password'" @click="typeRef = typeRef === 'text' ? 'password' : 'text'">
+        <img
+          :src="typeRef === 'text' ? eyeOpenIcon : eyeClosedIcon"
+          alt="eye icon"
+          class="w-6 h-6"
+        />
+      </button>
+    </div>
     <div class="min-h-5">
-      <p v-if="error" id="error" class="text-red-600 text-sm md:whitespace-nowrap">{{ error }}</p>
-    </div>  
+      <p
+        v-if="error"
+        id="error"
+        class="text-red-600 text-sm md:whitespace-nowrap"
+      >
+        {{ error }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import ToolTip from "./ToolTip.vue";
-import { defineModel } from "vue";
+import eyeClosedIcon from "../../assets/icons/eye-closed.svg";
+import eyeOpenIcon from "../../assets/icons/eye-outline.svg";
+import { defineModel, ref } from "vue";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     type?: string;
     label: string;
@@ -30,5 +50,7 @@ withDefaults(
   }
 );
 
-const modelValue = defineModel('modelValue');
+const typeRef = ref(props.type);
+
+const modelValue = defineModel("modelValue");
 </script>

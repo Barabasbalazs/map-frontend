@@ -1,21 +1,30 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 const userSchema = Joi.object({
-    id: Joi.number().min(1).required(),
-    name: Joi.string().required(),
-    email: Joi.string().email({ tlds: { allow: false } }).required(),
-    coords: Joi.object({
-        lat: Joi.number().required().min(-90).max(90),
-        lng: Joi.number().required().max(180).min(-180),
-    }),
+  id: Joi.number().min(1).required(),
+  name: Joi.string().required(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required(),
+  coords: Joi.object({
+    lat: Joi.number().required().min(-90).max(90),
+    lng: Joi.number().required().max(180).min(-180),
+  }),
+  role: Joi.string().valid("ADMIN", "USER"),
 });
 
 const pathParametersSchema = Joi.object({
-    distance: Joi.number().min(0).required(),
-    speed: Joi.number().min(0).required(),
+  distance: Joi.number().min(0).required(),
+  speed: Joi.number().min(0).required(),
 });
 
 export const userParametersSchema = Joi.object({
-    user: userSchema,
-    parameters: pathParametersSchema,
+  user: userSchema,
+  parameters: pathParametersSchema,
 });
+
+export const userAuthSchema = userSchema
+  .fork(["id", "coords"], () => Joi.any().strip())
+  .keys({
+    password: Joi.string().required(),
+  });

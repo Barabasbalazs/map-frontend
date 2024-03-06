@@ -20,7 +20,7 @@ export const authService = {
   },
   register: async (user: Partial<User>) => {
     const resp = await request.post<Partial<User>>({
-      url: `${authUrl}/register`,
+      url: `${authUrl}/signup`,
       params: user,
     });
     return await parseResponse(resp);

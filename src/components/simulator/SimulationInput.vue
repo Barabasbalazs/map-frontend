@@ -67,7 +67,7 @@ import BaseInput from "../shared/BaseInput.vue";
 import BaseButton from "../shared/BaseButton.vue";
 import { UserWithParameters } from "../../types/user-parameters";
 import { userParametersSchema } from "../../validation/user-parameters-validation";
-import { capitalizeFirstLetter } from "../../utils/string-manipulation";
+import { mapErroMessage } from "../../utils/validation-error-parser";
 import { ref } from "vue";
 
 const props = defineProps<{
@@ -89,21 +89,6 @@ const errors = ref({
   speed: "",
 });
 
-function mapErroMessage(errorMessage: string) {
-  const key = Object.keys(errors.value).find((key) =>
-    errorMessage.includes(key)
-  );
-  if (key) {
-    const errorWithoutQutes = errorMessage.replace(/"/g, "");
-    const lastDotIndex = errorWithoutQutes.lastIndexOf(".");
-    errors.value[key] = capitalizeFirstLetter(
-      lastDotIndex === -1
-        ? errorWithoutQutes
-        : errorWithoutQutes.substring(lastDotIndex + 1)
-    );
-  }
-}
-
 async function validateModel() {
   errors.value = {
     id: "",
@@ -116,7 +101,7 @@ async function validateModel() {
   try {
     await userParametersSchema.validateAsync(model.value);
   } catch (error) {
-    mapErroMessage(error.message);
+    mapErroMessage(errors, error.message);
     return;
   }
   emit("update:modelValue", model.value);

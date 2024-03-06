@@ -31,7 +31,7 @@ describe("auth-service tests", () => {
 
     await authService.register(userCredentials);
 
-    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/auth/register", {
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/auth/signup", {
       body: JSON.stringify(userCredentials),
       headers: { "Content-Type": "application/json" },
       method: "POST",

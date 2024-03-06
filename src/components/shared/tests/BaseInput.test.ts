@@ -112,7 +112,7 @@ describe("BaseInput Rendering Tests", () => {
     } catch (e) {
       expect(e).toBeDefined();
     }
-  })
+  });
 });
 
 describe("BaseInput behaviour tests", () => {
@@ -167,5 +167,43 @@ describe("BaseInput behaviour tests", () => {
     await wrapper.setProps({ error: "Error text" });
 
     expect(wrapper.html()).toContain("Error text");
+  });
+  test("BaseInput with password type should render an input where the viewability can be changed", async () => {
+    const wrapper = mount(BaseInput, {
+      props: {
+        label: "Enter password",
+        modelValue: "",
+        type: "password",
+      },
+    });
+
+    const input = wrapper.find("input");
+
+    expect(input.attributes("type")).toBe("password");
+
+    const button = wrapper.find("button");
+
+    expect(button.exists()).toBe(true);
+
+    await button.trigger("click");
+
+    expect(input.attributes("type")).toBe("text");
+  });
+  test("BaseInput with checkbox type should render the label inside the input", () => {
+    const wrapper = mount(BaseInput, {
+      props: {
+        label: "Enter something",
+        type: "checkbox",
+        modelValue: false,
+      },
+    });
+
+    const input = wrapper.find("input");
+
+    expect(input.attributes("type")).toBe("checkbox");
+
+    const label = wrapper.find("label");
+
+    expect(label.exists()).toBe(true);
   });
 });
