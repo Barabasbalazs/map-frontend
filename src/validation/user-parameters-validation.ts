@@ -10,7 +10,7 @@ const userSchema = Joi.object({
     lat: Joi.number().required().min(-90).max(90),
     lng: Joi.number().required().max(180).min(-180),
   }),
-  role: Joi.string().valid("ADMIN", "USER"),
+  role: Joi.string().valid("admin", "user", "guide"),
 });
 
 const pathParametersSchema = Joi.object({

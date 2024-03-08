@@ -65,7 +65,7 @@ describe("RegisterForm related tests", () => {
       email: "test@mail.com",
       password: "password",
       name: "test",
-      role: "ADMIN",
+      role: "admin",
     });
   });
 });

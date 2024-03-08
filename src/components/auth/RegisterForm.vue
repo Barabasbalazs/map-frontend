@@ -25,7 +25,7 @@
           id="role"
           label="Admin?"
           type="checkbox"
-          @update:modelValue="(value: boolean) => model.role = value ? 'ADMIN' : 'USER'"
+          @update:modelValue="(value: boolean) => model.role = value ? 'admin' : 'user'"
         />
       </div>
       <div class="flex justify-center w-full">
