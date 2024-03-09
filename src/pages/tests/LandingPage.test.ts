@@ -37,6 +37,8 @@ describe("LandinPage auth level tests", () => {
     expect(trackingLink.exists()).toBe(true);
     const simulatorLink = wrapper.find("#simulator");
     expect(simulatorLink.exists()).toBe(true);
+    const trailsLink = wrapper.find("#trails");
+    expect(trailsLink.exists()).toBe(true);
   });
   test("LandingPage does not render Tracking href when user is not admin or guide", async () => {
     const wrapper = mount(LandingPage, {
