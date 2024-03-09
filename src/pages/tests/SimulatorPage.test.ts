@@ -1,4 +1,3 @@
-import App from "../../App.vue";
 import SimulatorPage from "../SimulatorPage.vue";
 import SimulationInput from "../../components/simulator/SimulationInput.vue";
 import PathDisplay from "../../components/simulator/PathDisplay.vue";

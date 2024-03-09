@@ -1,24 +1,11 @@
-import AppVue from "../../App.vue";
 import NotFoundPage from "../NotFoundPage.vue";
-import { Router, createRouter, createWebHistory } from "vue-router";
-import {
-  mount,
-  shallowMount,
-  enableAutoUnmount,
-  flushPromises,
-} from "@vue/test-utils";
+import { shallowMount, enableAutoUnmount } from "@vue/test-utils";
 import { expect, test, describe, afterEach, beforeEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import router from "../../routing/router";
 
 enableAutoUnmount(afterEach);
 
-let localRouter: Router;
 beforeEach(async () => {
-  localRouter = createRouter({
-    history: createWebHistory(),
-    routes: router.options.routes,
-  });
   setActivePinia(createPinia());
 });
 

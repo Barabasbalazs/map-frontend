@@ -1,7 +1,7 @@
 <template>
   <PageLayout>
     <div class="flex flex-col items-center h-full w-full gap-2 px-5 md:px-0">
-      <router-link to="/tracking" id="tracking" class="flex items-center gap-4">
+      <router-link v-if="user?.role !== 'user'" to="/tracking" id="tracking" class="flex items-center gap-4">
         <div class="flex items-center justify-center pr-2">
           <img class="w-8 h-8" :src="crossHairGps" alt="crossHairGps" />
         </div>
@@ -25,4 +25,10 @@
 import PageLayout from "../components/shared/PageLayout.vue";
 import monitorAccount from "../assets/icons/monitor-account.svg";
 import crossHairGps from "../assets/icons/crosshairs-gps.svg";
+import { useAuthStore } from "../stores/auth-store";
+import { computed } from "vue";
+
+const authStore = useAuthStore();
+
+const user = computed(() => authStore.user);
 </script>
