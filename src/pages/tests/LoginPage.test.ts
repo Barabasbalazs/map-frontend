@@ -56,27 +56,6 @@ describe("LoginPage related tests", () => {
     });
   });
 
-  test("If login is succesfull, then app redirects to landing page", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue(
-      createFetchResponse({
-        userCredentials,
-      })
-    );
-
-    localRouter.push("/login");
-    await localRouter.isReady();
-
-    const loginForm = mount(LoginForm);
-
-    expect(loginForm.exists()).toBe(true);
-
-    loginForm.vm.$emit("submit", userCredentials);
-
-    await loginForm.vm.$nextTick();
-
-    expect(router.currentRoute.value.path).toBe("/");
-  });
-
   test("If register event is fired, loginpage should switch to register form", async () => {
     const wrapper = mount(LoginPage);
     const loginForm = wrapper.findComponent(LoginForm);

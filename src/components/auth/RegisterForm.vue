@@ -85,6 +85,7 @@ async function validateForm() {
   try {
     await userAuthSchema.validateAsync(model.value);
   } catch (error) {
+    //role validation not mapped
     mapErroMessage(errors, error.message);
     return;
   }

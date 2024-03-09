@@ -65,9 +65,6 @@ export const request = {
 };
 
 export const parseResponse = async (resp: Response) => {
-  if (resp.status === 200 || resp.status < 300) {
-    const response = await resp.json();
-    return response;
-  }
-  return null;
+  const response = await resp.json();
+  return response;
 };

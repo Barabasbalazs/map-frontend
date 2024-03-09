@@ -8,27 +8,31 @@ export const useAuthStore = defineStore("auth", {
     authToken: "" as string,
   }),
   actions: {
-    async login(user: Partial<User>): Promise<Partial<User> | null> {
+    async login(
+      user: Partial<User>
+    ): Promise<Partial<User> | { message: string } | null> {
       const response = await authService.login(user.email, user.password);
-      if (response) {
+      if (response?.user && response.authToken) {
         this.user = response.user;
         this.authToken = response.authToken;
         return this.user;
       }
-      return null;
+      return response || null;
     },
     async logout() {
       this.user = {} as User;
       this.authToken = "";
     },
-    async register(user: Partial<User>): Promise<Partial<User> | null> {
+    async register(
+      user: Partial<User>
+    ): Promise<Partial<User> | { message: string } | null> {
       const response = await authService.register(user);
-      if (response) {
+      if (response?.user && response.authToken) {
         this.user = response.user;
         this.authToken = response.authToken;
         return this.user;
       }
-      return null;
+      return response || null;
     },
   },
   persist: {

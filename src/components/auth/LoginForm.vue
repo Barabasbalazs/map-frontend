@@ -9,6 +9,7 @@
           id="password"
           label="Password"
           type="password"
+          @keyup.enter="emit('submit', model)"
         />
       </div>
       <div class="flex justify-center w-full">
