@@ -9,14 +9,15 @@
       </div>
     </div>
     <div v-if="isAuthenticated" class="flex flex-col items-center justify-center pb-8 gap-2">
-      <p>{{ user?.name || user?.email }}</p>
+      <p>{{ user?.name || user?.email }} ({{ capitalizeFirstLetter(user?.role) }})</p>
       <button @click="logoutUser">Logout</button>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { useAuthStore } from '../../stores/auth-store';
+import { capitalizeFirstLetter } from '../../utils/string-manipulation';
 import router from '../../routing/router';
+import { useAuthStore } from '../../stores/auth-store';
 import { computed } from 'vue';
 
 withDefaults(

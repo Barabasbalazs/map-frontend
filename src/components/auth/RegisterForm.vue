@@ -20,10 +20,12 @@
         />
       </div>
       <div class="flex items-center justify-center">
-        <BaseInput
+        <SelectInput
+          class="w-1/2"
           v-model="model.role"
           id="role"
-          label="Admin?"
+          label="Role"
+          :options="roleOptions"
           type="checkbox"
           @update:modelValue="(value: boolean) => model.role = value ? 'admin' : 'user'"
         />
@@ -46,24 +48,10 @@
 <script setup lang="ts">
 import BaseInput from "../shared/BaseInput.vue";
 import BaseButton from "../shared/BaseButton.vue";
+import SelectInput from "../shared/SelectInput.vue";
 import { userAuthSchema } from "../../validation/user-parameters-validation";
 import { mapErroMessage } from "../../utils/validation-error-parser";
 import { ref } from "vue";
-
-const model = ref({
-  name: "",
-  email: "",
-  password: "",
-  role: "USER",
-});
-
-const errors = ref({
-  name: "",
-  email: "",
-  password: "",
-});
-
-const confirmPassword = ref("");
 
 const emit = defineEmits<{
   register: [
@@ -72,11 +60,30 @@ const emit = defineEmits<{
   return: [];
 }>();
 
+const model = ref({
+  name: "",
+  email: "",
+  password: "",
+  role: "user",
+});
+
+const errors = ref({
+  name: "",
+  email: "",
+  password: "",
+  role: "",
+});
+
+const confirmPassword = ref("");
+
+const roleOptions = ["user", "admin", "guide"];
+
 async function validateForm() {
   errors.value = {
     name: "",
     email: "",
     password: "",
+    role: "",
   };
   if (model.value.password !== confirmPassword.value) {
     errors.value.password = "Passwords do not match";

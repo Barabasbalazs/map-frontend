@@ -1,6 +1,7 @@
 import RegisterForm from "../RegisterForm.vue";
 import BaseInput from "../../shared/BaseInput.vue";
 import BaseButton from "../../shared/BaseButton.vue";
+import SelectInput from "../../shared/SelectInput.vue";
 import { mount } from "@vue/test-utils";
 import { describe, test, expect } from "vitest";
 
@@ -17,12 +18,11 @@ describe("RegisterForm related tests", () => {
       .findComponent(BaseButton);
     const returnButton = wrapper.get("#returnButton");
     const nameInput = wrapper.get("#name").findComponent(BaseInput);
-    const roleInput = wrapper.get("#role").findComponent(BaseInput);
+    const roleInput = wrapper.get("#role").findComponent(SelectInput);
 
     expect(returnButton).toBeDefined();
     expect(nameInput.exists()).toBe(true);
     expect(roleInput.exists()).toBe(true);
-    expect(roleInput.props("type")).toBe("checkbox");
     expect(emailInput.exists()).toBe(true);
     expect(passwordInput.exists()).toBe(true);
     expect(confirmPasswordInput.exists()).toBe(true);
@@ -46,17 +46,15 @@ describe("RegisterForm related tests", () => {
       .get("#registerButton")
       .findComponent(BaseButton);
     const nameInput = wrapper.get("#name").findComponent(BaseInput);
-    const roleInput = wrapper.get("#role").findComponent(BaseInput);
+    const roleInput = wrapper.get("#role").findComponent(SelectInput);
 
     await emailInput.setValue("test@mail.com");
     await passwordInput.setValue("password");
     await confirmPasswordInput.setValue("password");
     await nameInput.setValue("test");
-    await roleInput.setValue(true);
+    await roleInput.setValue("admin");
 
     await registerButton.trigger("click");
-
-    console.log(wrapper.emitted());
 
     const emitEvent = wrapper.emitted("register");
 
