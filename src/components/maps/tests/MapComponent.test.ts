@@ -1,4 +1,4 @@
-import MapComponent from "../MapComponent.vue";
+import MapComponent from "../TrackingMapComponent.vue";
 import BaseModal from "../../shared/BaseModal.vue";
 import { Router, createRouter, createWebHistory } from "vue-router";
 import router from "../../../routing/router";
