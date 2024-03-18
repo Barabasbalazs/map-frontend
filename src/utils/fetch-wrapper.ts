@@ -25,7 +25,7 @@ export const request = {
           options.params[key as keyof Object]
         }&`;
       });
-      url = `${options.url}${queryString}`;
+      url = `${options.url}${queryString.length > 1 ? queryString : ""}`;
     }
     return fetch(url, {
       method: "GET",

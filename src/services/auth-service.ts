@@ -6,7 +6,7 @@ const { apiUrl } = configProvider;
 
 const authUrl = `${apiUrl}/auth`;
 
-export const authService = {
+const authService = {
   login: async (email: string, password: string) => {
     const user = {
       email,
@@ -26,3 +26,5 @@ export const authService = {
     return await parseResponse(resp);
   },
 };
+
+export default authService;

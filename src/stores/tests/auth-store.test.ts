@@ -9,7 +9,7 @@ beforeEach(() => {
   setActivePinia(createPinia());
 });
 
-describe("Auth Store", () => {
+describe("Auth Store tests", () => {
   test("Logout should clear user and authToken", () => {
     const authStore = useAuthStore();
     authStore.user = userCredentials;

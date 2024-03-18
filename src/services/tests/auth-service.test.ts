@@ -1,10 +1,10 @@
 import { describe, test, expect, vi } from "vitest";
-import { authService } from "../auth-service";
+import authService from "../auth-service";
 import { createFetchResponse } from "../../utils/testing-utilites";
 
 const userCredentials = { email: "test@mail.com", password: "123456789" };
 
-describe("auth-service tests", () => {
+describe("Auth-service tests", () => {
   test("Login calls the correct endpoint", async () => {
     globalThis.fetch = vi.fn().mockResolvedValue(
       createFetchResponse({
