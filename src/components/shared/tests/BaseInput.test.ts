@@ -206,4 +206,17 @@ describe("BaseInput behaviour tests", () => {
 
     expect(label.exists()).toBe(true);
   });
+  test("BaseInput with disabled prop should render the input as disabled", () => {
+    const wrapper = mount(BaseInput, {
+      props: {
+        label: "Enter something",
+        modelValue: "test",
+        disabled: true,
+      },
+    });
+
+    const input = wrapper.find("input");
+
+    expect(Object.keys(input.attributes()).includes('disabled')).toBe(true);
+  });
 });

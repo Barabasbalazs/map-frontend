@@ -8,6 +8,7 @@
       <input
         v-model="modelValue"
         :type="typeRef"
+        :disabled="disabled"
         class="border-2 border-black rounded-xl px-2 py-1 focus:border-black"
         :class="{ 'w-full' : typeRef !== 'checkbox'}"
       />
@@ -44,6 +45,7 @@ const props = withDefaults(
     label: string;
     error?: string;
     tooltip?: string;
+    disabled?: boolean;
   }>(),
   {
     type: "text",

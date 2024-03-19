@@ -33,7 +33,7 @@ describe("Trails-service tests", () => {
     await trailsService.getTrails({}, 'token');
 
     expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/trails", {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer token", },
       method: "GET",
       mode: "cors",
     });
@@ -50,7 +50,7 @@ describe("Trails-service tests", () => {
     expect(fetch).toHaveBeenCalledWith(
       "http://localhost:8080/v1/trails?creator=1&sort=location&order=asc&search=Test&id=1&",
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer token", },
         method: "GET",
         mode: "cors",
       }
