@@ -8,7 +8,7 @@
         <slot />
       </div>
     </div>
-    <div v-if="isAuthenticated" class="flex flex-col items-center justify-center pb-8 gap-2">
+    <div v-if="isAuthenticated" class="flex flex-col items-center justify-center py-8 gap-2">
       <p>{{ user?.name || user?.email }} ({{ capitalizeFirstLetter(user?.role) }})</p>
       <button @click="logoutUser">Logout</button>
     </div>

@@ -17,7 +17,7 @@ describe("LeafletService tests", () => {
     const user = { id: 1, name: "John Doe", coords, email: "ttt@mail.com" };
     const leafletService = new LeafletService(mapDiv, coords);
 
-    leafletService.addMarker(user);
+    leafletService.addUserMarker(user);
 
     const marker = leafletService.getMarkerMapping().get(user.id);
 
@@ -34,10 +34,10 @@ describe("LeafletService tests", () => {
 
     const leafletService = new LeafletService(mapDiv, coords);
 
-    leafletService.addMarker(user1);
+    leafletService.addUserMarker(user1);
 
     // Update markers with a new user list
-    leafletService.updateMarkers([user1, user2]);
+    leafletService.updateUserMarkers([user1, user2]);
 
     const marker1 = leafletService.getMarkerMapping().get(user1.id);
     const marker2 = leafletService.getMarkerMapping().get(user2.id);

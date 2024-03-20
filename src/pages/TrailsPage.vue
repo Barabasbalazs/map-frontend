@@ -1,7 +1,14 @@
 <template>
   <PageLayout>
     <div class="flex flex-col gap-4 items-center">
-      <TrailDisplay v-for="(trail, ind) in trails" :key="ind" :trail="trail" :user="user"/>
+      <TrailDisplay
+        v-for="(trail, ind) in trails"
+        :key="ind"
+        :trail="trail"
+        :user="user"
+        :editable="user.role === 'guide'"
+      />
+      <TrailDisplay v-if="user.role === 'guide'" :user="user" :trail="emptyTrail" editable/>
     </div>
   </PageLayout>
 </template>
@@ -19,10 +26,16 @@ const trailsStore = useTrailsStore();
 const user = computed(() => authStore.user);
 const trails = computed(() => trailsStore.trails);
 
+const emptyTrail = {
+  name: "",
+  description: "",
+  path: [],
+};
+
 async function getTrails(parameters: RequestParameters = {}) {
-  if (user.value.role === "guide") {
-    parameters.creator = user.value.id;
-  }
+  // if (user.value.role === "guide") {
+  //   parameters.creator = user.value.id;
+  // }
   await trailsStore.getTrails(parameters);
 }
 

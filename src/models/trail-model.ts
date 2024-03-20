@@ -3,7 +3,7 @@ import { User } from "./user-model";
 
 export interface PathPoint {
   name: string;
-  coordinates: Coordinates[];
+  coordinates: Coordinates;
 }
 
 export interface Trail {

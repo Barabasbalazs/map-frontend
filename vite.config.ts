@@ -31,6 +31,7 @@ export default defineConfig({
         "src/main.ts",
         "src/models/**/*",
         "src/constants/**/*",
+        "src/config/**/*",
         "src/types/**/*",
         "html/**/*",
         "src/utils/testing-utilites.ts",

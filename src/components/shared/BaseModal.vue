@@ -20,19 +20,17 @@
       </div>
       <slot v-else />
       <div class="flex gap-2 pt-1">
-        <BaseButton
-          id="modal-confirmation-button"
-          class="min-w-16"
-          @click="confirmAction"
-          >{{ (buttonTexts && buttonTexts.length > 0) ? buttonTexts[0] : "Ok" }}</BaseButton
-        >
+        <BaseButton id="modal-confirmation-button" @click="confirmAction">{{
+          buttonTexts && buttonTexts.length > 0 ? buttonTexts[0] : "Ok"
+        }}</BaseButton>
         <BaseButton
           v-if="cancel"
-          class="min-w-16"
           id="modal-cancel-button"
           secondary
           @click="cancelAction"
-          >{{ (buttonTexts && buttonTexts.length > 1) ? buttonTexts[1] : "Cancel" }}</BaseButton
+          >{{
+            buttonTexts && buttonTexts.length > 1 ? buttonTexts[1] : "Cancel"
+          }}</BaseButton
         >
       </div>
     </div>

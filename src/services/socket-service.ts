@@ -30,7 +30,7 @@ class SocketService {
     });
 
     this.#socket.on("update-location", (users: User[]) => {
-      this.#leafletService.updateMarkers(users);
+      this.#leafletService.updateUserMarkers(users);
     });
 
     this.#socket.on("disconnect", () => {

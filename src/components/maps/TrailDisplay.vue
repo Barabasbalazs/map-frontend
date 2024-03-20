@@ -6,23 +6,28 @@
         id="name"
         label="Name"
         class="w-full"
-        :disabled="disabled"
+        :disabled="!editable"
       />
       <BaseInput
         v-model="localTrail.location"
         id="location"
         label="Location"
         class="w-full"
-        :disabled="disabled"
+        :disabled="!editable"
       />
     </div>
     <div class="h-80 w-full" ref="mapContainer" />
-    {{ trail }}
+  
+    <div v-if="editable" class="flex items-center justify-center gap-2 pt-5 pb-2">
+      <BaseButton id="save">Save</BaseButton>
+      <BaseButton id="cancel" secondary>Cancel</BaseButton>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import BaseInput from "../shared/BaseInput.vue";
+import BaseButton from "../shared/BaseButton.vue";
 import { Trail } from "../../models/trail-model";
 import { User } from "../../models/user-model";
 import LeafletService from "../../services/leaflet-service";
@@ -31,9 +36,8 @@ import { ref, computed, onMounted } from "vue";
 const props = defineProps<{
   trail: Trail;
   user: Partial<User>;
+  editable?: boolean;
 }>();
-
-const disabled = computed(() => props.user?.role !== "guide");
 
 const localTrail = ref(props.trail);
 
@@ -60,10 +64,15 @@ const meanCoordinates = computed(() => {
 
 onMounted(async () => {
   if (mapContainer.value) {
-    new LeafletService(mapContainer, {
-      lat: props.trail.path.length ? meanCoordinates.value.lat : 51.505,
-      lng: props.trail.path.length ? meanCoordinates.value.lng : -0.09,
-    });
+    new LeafletService(
+      mapContainer,
+      {
+        lat: props.trail.path.length ? meanCoordinates.value.lat : 51.505,
+        lng: props.trail.path.length ? meanCoordinates.value.lng : -0.09,
+      },
+      props.editable,
+      props.trail.path
+    );
   }
 });
 </script>
