@@ -1,20 +1,27 @@
 <template>
   <PageLayout>
     <div class="flex flex-col gap-4 items-center">
+      <TrailFilters :user="user" @search="getTrails" />
       <TrailDisplay
-        v-for="(trail, ind) in trails"
-        :key="ind"
+        v-for="trail in trails"
+        :key="trail.id"
         :trail="trail"
         :user="user"
         :editable="user.role === 'guide'"
       />
-      <TrailDisplay v-if="user.role === 'guide'" :user="user" :trail="emptyTrail" editable/>
+      <TrailDisplay
+        v-if="user.role === 'guide'"
+        :user="user"
+        :trail="emptyTrail"
+        editable
+      />
     </div>
   </PageLayout>
 </template>
 <script setup lang="ts">
 import PageLayout from "../components/shared/PageLayout.vue";
 import TrailDisplay from "../components/maps/TrailDisplay.vue";
+import TrailFilters from "../components/trails/TrailFilters.vue";
 import { RequestParameters } from "../types/request-parameter";
 import { useAuthStore } from "../stores/auth-store";
 import { useTrailsStore } from "../stores/trails-store";

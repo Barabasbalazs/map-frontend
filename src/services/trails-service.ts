@@ -8,7 +8,10 @@ const { apiUrl } = configProvider;
 const trailsUrl = `${apiUrl}/trails`;
 
 const trailsService = {
-  getTrails: async (params: RequestParameters, authToken: string): Promise<Trail[] | []> => {
+  getTrails: async (
+    params: RequestParameters,
+    authToken: string
+  ): Promise<Trail[] | []> => {
     const resp = await request.get({
       url: trailsUrl,
       params,

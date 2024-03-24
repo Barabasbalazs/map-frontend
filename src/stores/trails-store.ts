@@ -10,11 +10,15 @@ export const useTrailsStore = defineStore("trails", {
     authStore: useAuthStore(),
   }),
   actions: {
-    async getTrails(params: RequestParameters): Promise<void> {
-      const response = await trailsService.getTrails(params, this.authStore.authToken);
+    async getTrails(params: RequestParameters): Promise<Trail[] | void> {
+      const response = await trailsService.getTrails(
+        params,
+        this.authStore.authToken
+      );
       if (response) {
         this.trails = response;
       }
+      return response;
     },
   },
   persist: {

@@ -17,8 +17,11 @@
       />
     </div>
     <div class="h-80 w-full" ref="mapContainer" />
-  
-    <div v-if="editable" class="flex items-center justify-center gap-2 pt-5 pb-2">
+
+    <div
+      v-if="editable"
+      class="flex items-center justify-center gap-2 pt-5 pb-2"
+    >
       <BaseButton id="save">Save</BaseButton>
       <BaseButton id="cancel" secondary>Cancel</BaseButton>
     </div>
@@ -39,7 +42,12 @@ const props = defineProps<{
   editable?: boolean;
 }>();
 
-const localTrail = ref(props.trail);
+const localTrail = computed({
+  get: () => props.trail,
+  set: (value: Trail) => {
+    Object.assign(props.trail, value);
+  },
+});
 
 const mapContainer = ref();
 
@@ -62,7 +70,7 @@ const meanCoordinates = computed(() => {
   };
 });
 
-onMounted(async () => {
+function initMap() {
   if (mapContainer.value) {
     new LeafletService(
       mapContainer,
@@ -74,5 +82,7 @@ onMounted(async () => {
       props.trail.path
     );
   }
-});
+}
+
+onMounted(() => initMap());
 </script>

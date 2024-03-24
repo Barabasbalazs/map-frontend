@@ -15,7 +15,7 @@ class LeafletService {
     return this.#markerMapping;
   }
 
-  constructor(
+  public initializeMap(
     mapDiv: Ref<HTMLElement>,
     coords: Coordinates,
     editable?: boolean,
@@ -27,8 +27,6 @@ class LeafletService {
 
     this.#mapInstance.value = L.map(mapDiv.value, {
       layers: this.#tileLayers,
-      //dragging: !L.Browser.mobile,
-      //tap: !L.Browser.mobile
     }).setView([coords.lat, coords.lng], path?.length || editable ? 7 : 13);
 
     const layerControl = L.control
@@ -65,6 +63,15 @@ class LeafletService {
         );
       }
     });
+  }
+
+  constructor(
+    mapDiv: Ref<HTMLElement>,
+    coords: Coordinates,
+    editable?: boolean,
+    path?: PathPoint[]
+  ) {
+    this.initializeMap(mapDiv, coords, editable, path);
   }
 
   #addDisplayMarker(id: number, coords: Coordinates, popupContent: string) {

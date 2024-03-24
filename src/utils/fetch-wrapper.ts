@@ -21,9 +21,11 @@ export const request = {
     if (options.params) {
       let queryString = "?";
       Object.keys(options.params).forEach((key) => {
-        queryString = `${queryString}${key}=${
-          options.params[key as keyof Object]
-        }&`;
+        if (options.params[key as keyof Object]) {
+          queryString = `${queryString}${key}=${
+            options.params[key as keyof Object]
+          }&`;
+        }
       });
       url = `${options.url}${queryString.length > 1 ? queryString : ""}`;
     }
