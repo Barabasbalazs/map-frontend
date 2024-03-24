@@ -74,6 +74,10 @@ class LeafletService {
     this.initializeMap(mapDiv, coords, editable, path);
   }
 
+  public destroyMap() {
+    this.#mapInstance.value.remove();
+  }
+
   #addDisplayMarker(id: number, coords: Coordinates, popupContent: string) {
     const icon = L.icon({
       iconUrl: markerIcon,

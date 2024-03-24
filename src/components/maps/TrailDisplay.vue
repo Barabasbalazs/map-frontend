@@ -34,7 +34,7 @@ import BaseButton from "../shared/BaseButton.vue";
 import { Trail } from "../../models/trail-model";
 import { User } from "../../models/user-model";
 import LeafletService from "../../services/leaflet-service";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps<{
   trail: Trail;
@@ -50,6 +50,7 @@ const localTrail = computed({
 });
 
 const mapContainer = ref();
+let leafletService = null;
 
 function maxAbsoluteCoordinate(coordinates: number[]): number {
   return Math.max(...coordinates.map((coordinate) => Math.abs(coordinate)));
@@ -72,17 +73,36 @@ const meanCoordinates = computed(() => {
 
 function initMap() {
   if (mapContainer.value) {
-    new LeafletService(
-      mapContainer,
-      {
-        lat: props.trail.path.length ? meanCoordinates.value.lat : 51.505,
-        lng: props.trail.path.length ? meanCoordinates.value.lng : -0.09,
-      },
-      props.editable,
-      props.trail.path
-    );
+    if (leafletService) {
+      leafletService.destroyMap();
+      leafletService.initializeMap(
+        mapContainer,
+        {
+          lat: props.trail.path.length ? meanCoordinates.value.lat : 51.505,
+          lng: props.trail.path.length ? meanCoordinates.value.lng : -0.09,
+        },
+        props.editable,
+        props.trail.path
+      );
+    } else {
+      leafletService = new LeafletService(
+        mapContainer,
+        {
+          lat: props.trail.path.length ? meanCoordinates.value.lat : 51.505,
+          lng: props.trail.path.length ? meanCoordinates.value.lng : -0.09,
+        },
+        props.editable,
+        props.trail.path
+      );
+    }
   }
 }
 
-onMounted(() => initMap());
+watch(
+  () => props.trail,
+  () => {
+    initMap();
+  },
+  { deep: true }
+);
 </script>
