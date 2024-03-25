@@ -34,7 +34,7 @@ import BaseButton from "../shared/BaseButton.vue";
 import { Trail } from "../../models/trail-model";
 import { User } from "../../models/user-model";
 import LeafletService from "../../services/leaflet-service";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 
 const props = defineProps<{
   trail: Trail;
@@ -44,11 +44,11 @@ const props = defineProps<{
 
 const localTrail = computed({
   get: () => props.trail,
-  set: (value: Trail) => {
-    Object.assign(props.trail, value);
-  },
+  set: (value: Trail) => value,
 });
 
+//known issue here, the init map is called twice on mounting
+const initialMount = ref(true);
 const mapContainer = ref();
 let leafletService = null;
 
@@ -71,37 +71,41 @@ const meanCoordinates = computed(() => {
   };
 });
 
-function initMap() {
+function initMap(trail: Trail) { 
   if (mapContainer.value) {
     if (leafletService) {
       leafletService.destroyMap();
       leafletService.initializeMap(
         mapContainer,
         {
-          lat: props.trail.path.length ? meanCoordinates.value.lat : 51.505,
-          lng: props.trail.path.length ? meanCoordinates.value.lng : -0.09,
+          lat: trail.path.length ? meanCoordinates.value.lat : 51.505,
+          lng: trail.path.length ? meanCoordinates.value.lng : -0.09,
         },
         props.editable,
-        props.trail.path
+        trail.path
       );
     } else {
       leafletService = new LeafletService(
         mapContainer,
         {
-          lat: props.trail.path.length ? meanCoordinates.value.lat : 51.505,
-          lng: props.trail.path.length ? meanCoordinates.value.lng : -0.09,
+          lat: trail.path.length ? meanCoordinates.value.lat : 51.505,
+          lng: trail.path.length ? meanCoordinates.value.lng : -0.09,
         },
         props.editable,
-        props.trail.path
+        trail.path
       );
     }
   }
 }
-
+onMounted(() => {
+  initMap(props.trail);
+  initialMount.value = false;
+});
 watch(
   () => props.trail,
   () => {
-    initMap();
+    if (initialMount.value) return;
+    initMap(localTrail.value);
   },
   { deep: true }
 );
