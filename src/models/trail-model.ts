@@ -7,7 +7,8 @@ export interface PathPoint {
 }
 
 export interface Trail {
-  id?: number;
+  _id?: string;
+  id?: string;
   name?: string;
   location?: string;
   creator?: User;

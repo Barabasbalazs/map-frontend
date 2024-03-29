@@ -10,7 +10,7 @@ enableAutoUnmount(afterEach);
 const emptyProps = {
   modelValue: {
     user: {
-      id: 0,
+      id: "0",
       name: "",
       coords: {
         lat: 0,
@@ -28,7 +28,7 @@ const emptyProps = {
 const baseProps = {
   modelValue: {
     user: {
-      id: 1,
+      id: "1",
       name: "test",
       coords: {
         lat: 51.507,

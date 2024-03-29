@@ -10,7 +10,7 @@ const testUser = {
   role: "guide",
   name: "test",
   email: "ffff@mail.com",
-  id: 123,
+  id: "123",
 };
 
 beforeEach(async () => {

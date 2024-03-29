@@ -13,7 +13,7 @@ enableAutoUnmount(afterEach);
 
 const baseProps = {
   user: {
-    id: 1,
+    id: "1",
     name: "John Doe",
   } as User,
   path: [

@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from "pinia";
 import { useTrailsStore } from "../trails-store";
+import { useAuthStore } from "../auth-store";
 import { createFetchResponse } from "../../utils/testing-utilites";
 import { describe, beforeEach, test, expect, vi } from "vitest";
 
@@ -52,5 +53,26 @@ describe("Trails Store tests", () => {
     );
 
     expect(trailsStore.trails).toEqual([mockedTrailResponse]);
+  });
+  test("Subcscribeto trail should send fetch request with provided trailId and authToken", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+    authStore.authToken = "authToken";
+    authStore.user = { id: "1", email: "mail@mail.com", trails: [] };
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(createFetchResponse([mockedTrailResponse]));
+
+    await trailsStore.subscribeToTrail("1");
+
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/trails/1/subscribe", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer authToken"
+      },
+      body: JSON.stringify({ "id": "1" }),
+      method: "PATCH",
+      mode: "cors",
+    });
   });
 });

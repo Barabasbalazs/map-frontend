@@ -14,7 +14,7 @@ describe("LeafletService tests", () => {
   test("Adds a marker to the map", () => {
     const mapDiv = ref(document.createElement("div"));
     const coords = { lat: 51.505, lng: -0.09 };
-    const user = { id: 1, name: "John Doe", coords, email: "ttt@mail.com" };
+    const user = { id: "1", name: "John Doe", coords, email: "ttt@mail.com" };
     const leafletService = new LeafletService(mapDiv, coords);
 
     leafletService.addUserMarker(user);
@@ -29,8 +29,8 @@ describe("LeafletService tests", () => {
   test("Updates markers on the map", () => {
     const mapDiv = ref(document.createElement("div"));
     const coords = { lat: 51.505, lng: -0.09 };
-    const user1 = { id: 1, name: "John Doe", coords, email: "tt2@mail.com" };
-    const user2 = { id: 2, name: "Jane Doe", coords: { lat: 52.0, lng: -0.1 }, email: "rr@mail.com" };
+    const user1 = { id: "1", name: "John Doe", coords, email: "tt2@mail.com" };
+    const user2 = { id: "2", name: "Jane Doe", coords: { lat: 52.0, lng: -0.1 }, email: "rr@mail.com" };
 
     const leafletService = new LeafletService(mapDiv, coords);
 

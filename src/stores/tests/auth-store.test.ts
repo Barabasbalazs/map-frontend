@@ -3,7 +3,7 @@ import { useAuthStore } from "../auth-store";
 import { createFetchResponse } from "../../utils/testing-utilites";
 import { describe, beforeEach, test, expect, vi } from "vitest";
 
-const userCredentials = { id: 1, email: "test@mail.com", name: "Test" };
+const userCredentials = { id: "1", email: "test@mail.com", name: "Test" };
 
 beforeEach(() => {
   setActivePinia(createPinia());
@@ -36,5 +36,31 @@ describe("Auth Store tests", () => {
       method: "POST",
       mode: "cors",
     });
+  });
+  test("Register should send fetch request with provided credentials", async () => {
+    const authStore = useAuthStore();
+    globalThis.fetch = vi.fn().mockResolvedValue(
+      createFetchResponse({
+        user: userCredentials,
+        authToken: "testToken",}));
+    await authStore.register({ email: userCredentials.email, password: '123456789', name: userCredentials.name });
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/auth/signup", {
+      body: JSON.stringify({email: userCredentials.email, password: '123456789', name: userCredentials.name}),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      mode: "cors",
+    });
+  });
+  test("AddtrailsToUser should add trailId to user's trails", () => {
+    const authStore = useAuthStore();
+    authStore.user = { ...userCredentials, trails: ["1"] };
+    authStore.addTrailToUser("2");
+    expect(authStore.user.trails).toEqual(["1", "2"]);
+  });
+  test("RemoveTrailFromUser should remove trailId from user's trails", () => {
+    const authStore = useAuthStore();
+    authStore.user = { ...userCredentials, trails: ["1", "2"] };
+    authStore.removeTrailFromUser("2");
+    expect(authStore.user.trails).toEqual(["1"]);
   });
 });

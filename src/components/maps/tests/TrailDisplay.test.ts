@@ -1,11 +1,17 @@
 import TrailDisplay from "../TrailDisplay.vue";
 import BaseInput from "../../shared/BaseInput.vue";
 import BaseButton from "../../shared/BaseButton.vue";
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
+import { createPinia, setActivePinia } from "pinia";
+
+beforeEach(async () => {
+  setActivePinia(createPinia());
+});
 
 const mockTrail = {
   id: "1",
+  _id: "1",
   name: "Test trail",
   location: "Test location",
   path: [
@@ -99,5 +105,43 @@ describe("TrailDisplay tests", () => {
     const cancelButton = wrapper.find("#cancel");
     expect(saveButton.exists()).toBe(false);
     expect(cancelButton.exists()).toBe(false);
+  });
+  test("TrailDisplay should render subscribe button if is user role is not guide", () => {
+    const wrapper = mount(TrailDisplay, {
+      props: {
+        trail: mockTrail,
+        user: {
+          ...mockTrail.creator,
+          role: "user",
+        },
+      },
+    });
+    const subscribeButton = wrapper.get("#subscribe").findComponent(BaseButton);
+    expect(subscribeButton.exists()).toBe(true);
+  });
+  test("TrailDisplay should not render subscribe button if user role is guide", () => {
+    const wrapper = mount(TrailDisplay, {
+      props: {
+        trail: mockTrail,
+        user: mockTrail.creator,
+      },
+    });
+    const subscribeButton = wrapper.find("#subscribe");
+    expect(subscribeButton.exists()).toBe(false);
+  });
+  test("TrailDisplay should render unsubscribe button if user is subscribed", () => {
+    const wrapper = mount(TrailDisplay, {
+      props: {
+        trail: {
+          ...mockTrail,
+        },
+        user: { ...mockTrail.creator, role: "user", trails: [mockTrail.id] },
+      },
+    });
+    const unsubscribeButton = wrapper
+      .get("#subscribe")
+      .findComponent(BaseButton);
+    expect(unsubscribeButton.html().includes("Unsubscribe"));
+    expect(unsubscribeButton.exists()).toBe(true);
   });
 });

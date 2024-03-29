@@ -12,12 +12,13 @@
           :editable="user.role === 'guide'"
         />
       </template>
-      <TrailDisplay
+      <!-- for adding new trails-->
+      <!-- <TrailDisplay
         v-if="user.role === 'guide'"
         :user="user"
         :trail="emptyTrail"
         editable
-      />
+      /> -->
     </div>
   </PageLayout>
 </template>
@@ -34,16 +35,18 @@ import { onMounted, computed, ref } from "vue";
 const authStore = useAuthStore();
 const trailsStore = useTrailsStore();
 
-const isLoading = ref(false);
+const isLoading = ref(true);
 
 const user = computed(() => authStore.user);
 const trails = computed(() => trailsStore.trails);
 
+/*
 const emptyTrail = {
   name: "",
   description: "",
   path: [],
 };
+*/
 
 async function getTrails(parameters: RequestParameters = {}) {
   // if (user.value.role === "guide") {

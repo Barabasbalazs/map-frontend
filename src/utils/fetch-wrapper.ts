@@ -44,20 +44,14 @@ export const request = {
     });
   },
   delete: (options: RequestSettings<RequestParameters>) => {
-    const reqpars = options.params as RequestParameters;
-    if (!reqpars?.id) return null;
-    const deleteUrl = `${options.url}/${reqpars?.id}`;
-    return fetch(deleteUrl, {
+    return fetch(options.url, {
       method: "DELETE",
       headers: headers(options.authToken),
       mode: "cors",
     });
   },
   patch: <T>(options: RequestSettings<T>) => {
-    const reqpars = options.params as RequestParameters;
-    if (!reqpars?.id) return null;
-    const putUrl = `${options.url}/${reqpars.id}`;
-    return fetch(putUrl, {
+    return fetch(options.url, {
       method: "PATCH",
       headers: headers(options.authToken),
       mode: "cors",

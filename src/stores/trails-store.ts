@@ -7,19 +7,41 @@ import { RequestParameters } from "../types/request-parameter";
 export const useTrailsStore = defineStore("trails", {
   state: () => ({
     trails: [] as Trail[],
-    authStore: useAuthStore(),
   }),
   actions: {
     async getTrails(params: RequestParameters): Promise<Trail[] | void> {
       const response = await trailsService.getTrails(
         params,
-        this.authStore.authToken
+        useAuthStore().authToken
       );
       if (response) {
         this.trails = response;
       }
       return response;
     },
+    cleanStore() {
+      this.trails = [];
+    },
+    async subscribeToTrail(trailId: string): Promise<Trail | void> {
+      const response = await trailsService.subscribeToTrail(
+        trailId,
+        useAuthStore().authToken
+      );
+      if (response) {
+        useAuthStore().addTrailToUser(trailId);
+      }
+      return response;
+    },
+    async unsubscribeFromTrail(trailId: string): Promise<Trail | void> {
+      const response = await trailsService.unsubscribeFromTrail(
+        trailId,
+        useAuthStore().authToken
+      );
+      if (response) {
+        useAuthStore().removeTrailFromUser(trailId);
+      }
+      return response;
+    }
   },
   persist: {
     enabled: true,

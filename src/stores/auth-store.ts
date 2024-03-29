@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { User } from "../models/user-model";
+import { useTrailsStore } from "./trails-store";
 import authService from "../services/auth-service";
 
 export const useAuthStore = defineStore("auth", {
@@ -22,6 +23,7 @@ export const useAuthStore = defineStore("auth", {
     async logout() {
       this.user = {} as User;
       this.authToken = "";
+      useTrailsStore().cleanStore();
     },
     async register(
       user: Partial<User>
@@ -33,6 +35,12 @@ export const useAuthStore = defineStore("auth", {
         return this.user;
       }
       return response || null;
+    },
+    addTrailToUser(trailId: string) {
+      this.user.trails.push(trailId);
+    },
+    removeTrailFromUser(trailId: string) {
+      this.user.trails = this.user.trails.filter((id: string) => id !== trailId);
     },
   },
   persist: {

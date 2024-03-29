@@ -8,7 +8,7 @@ import markerIcon from "../assets/icons/marker.svg";
 import tileLayers from "../constants/tilelayers";
 class LeafletService {
   #mapInstance: Ref<any> = ref();
-  #markerMapping: Map<number, Marker<any>>;
+  #markerMapping: Map<string, Marker<any>>;
   #tileLayers: Array<TileLayer>;
 
   public getMarkerMapping() {
@@ -46,18 +46,18 @@ class LeafletService {
       "control-zoom"
     );
 
-    this.#markerMapping = new Map<number, Marker<any>>();
+    this.#markerMapping = new Map<string, Marker<any>>();
 
     if (path) {
       path.forEach((point, index) => {
-        this.#addDisplayMarker(index, point.coordinates, point.name);
+        this.#addDisplayMarker(index.toString(), point.coordinates, point.name);
       });
     }
 
     this.#mapInstance.value.on("click", (e: any) => {
       if (editable) {
         this.#addDisplayMarker(
-          this.#markerMapping.size,
+          this.#markerMapping.size.toString(),
           e.latlng,
           "Just added"
         );
@@ -78,7 +78,7 @@ class LeafletService {
     this.#mapInstance.value.remove();
   }
 
-  #addDisplayMarker(id: number, coords: Coordinates, popupContent: string) {
+  #addDisplayMarker(id: string, coords: Coordinates, popupContent: string) {
     const icon = L.icon({
       iconUrl: markerIcon,
       iconSize: [25, 41],
