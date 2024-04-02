@@ -30,8 +30,12 @@
         >{{ isSubscribed ? "Unsubscribe" : "Subscribe" }}</BaseButton
       >
     </div>
+    <div v-else-if="isCreator" class="flex items-center justify-center gap-2 pt-5 pb-2">
+      <BaseButton id="edit" @click="handleEdit">Edit</BaseButton>
+      <BaseButton id="delete" @click="handleDelete" secondary>Delete</BaseButton>
+    </div>
     <div
-      v-else-if="editable"
+      v-else-if="editMode"
       class="flex items-center justify-center gap-2 pt-5 pb-2"
     >
       <BaseButton id="save" :disabled="isLoading">Save</BaseButton>
@@ -57,6 +61,10 @@ const props = defineProps<{
   editable?: boolean;
 }>();
 
+const emit = defineEmits<{
+  delete: [id: string];
+}>();
+
 let leafletService = null;
 
 const trailsStore = useTrailsStore();
@@ -65,6 +73,7 @@ const trailsStore = useTrailsStore();
 const isLoading = ref(false);
 const initialMount = ref(true);
 const mapContainer = ref();
+const editMode = ref(props.editable);
 
 const localTrail = computed({
   get: () => props.trail,
@@ -73,6 +82,7 @@ const localTrail = computed({
 const isSubscribed = computed(() =>
   props.user?.trails?.includes(props.trail._id)
 );
+const isCreator = computed(() => props.user?.id === props.trail?.creator[0]?.id);
 
 function maxAbsoluteCoordinate(coordinates: number[]): number {
   return Math.max(...coordinates.map((coordinate) => Math.abs(coordinate)));
@@ -118,6 +128,14 @@ function initMap(trail: Trail) {
       );
     }
   }
+}
+
+function handleEdit() {
+  editMode.value = true;
+}
+
+function handleDelete() {
+  emit("delete", props.trail._id || props.trail.id);
 }
 
 async function handleSubscribe() {

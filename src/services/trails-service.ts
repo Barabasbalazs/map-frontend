@@ -19,6 +19,16 @@ const trailsService = {
     });
     return await parseResponse(resp);
   },
+  deleteTrail: async (
+    trailId: string,
+    authToken: string
+  ): Promise<Trail | null> => {
+    const resp = await request.delete({
+      url: `${trailsUrl}/${trailId}`,
+      authToken: authToken,
+    });
+    return await parseResponse(resp);
+  },
   subscribeToTrail: async (
     trailId: string,
     authToken: string

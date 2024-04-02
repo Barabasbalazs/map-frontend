@@ -19,6 +19,16 @@ export const useTrailsStore = defineStore("trails", {
       }
       return response;
     },
+    async deleteTrail(trailId: string): Promise<Trail | void> {
+      const response = await trailsService.deleteTrail(
+        trailId,
+        useAuthStore().authToken
+      );
+      if (response) {
+        this.trails = this.trails.filter((trail: Trail) => (trail.id || trail._id) !== trailId);
+      }
+      return response;
+    },
     cleanStore() {
       this.trails = [];
     },

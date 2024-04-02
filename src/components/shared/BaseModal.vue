@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-[500] flex items-center justify-center h-screen w-screen bg-gray-200 bg-opacity-75"
+    class="fixed inset-0 z-[1000] flex items-center justify-center h-screen w-screen bg-gray-200 bg-opacity-75"
     @click="isOpen = false"
   >
     <div

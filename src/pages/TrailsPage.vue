@@ -9,7 +9,7 @@
           :key="trail.id"
           :trail="trail"
           :user="user"
-          :editable="user.role === 'guide'"
+          @delete="openDeleteModal"
         />
       </template>
       <!-- for adding new trails-->
@@ -21,12 +21,23 @@
       /> -->
     </div>
   </PageLayout>
+  <BaseModal
+    v-model:is-open="isModalOpen"
+    cancel
+    warning
+    @close="isModalOpen = false"
+    title="Delete Trail"
+    text="Are you sure you would like to delete this Trail? There may be users subscribed to it."
+    @confirm="deleteTrail"
+    @cancel="isModalOpen = false"
+  />
 </template>
 <script setup lang="ts">
 import PageLayout from "../components/shared/PageLayout.vue";
 import TrailDisplay from "../components/maps/TrailDisplay.vue";
 import TrailFilters from "../components/trails/TrailFilters.vue";
 import Loader from "../components/shared/LoadingAnimation.vue";
+import BaseModal from "../components/shared/BaseModal.vue";
 import { RequestParameters } from "../types/request-parameter";
 import { useAuthStore } from "../stores/auth-store";
 import { useTrailsStore } from "../stores/trails-store";
@@ -36,6 +47,8 @@ const authStore = useAuthStore();
 const trailsStore = useTrailsStore();
 
 const isLoading = ref(true);
+const isModalOpen = ref(false);
+const trailToDelete = ref("");
 
 const user = computed(() => authStore.user);
 const trails = computed(() => trailsStore.trails);
@@ -48,6 +61,11 @@ const emptyTrail = {
 };
 */
 
+function openDeleteModal(id: string) {
+  trailToDelete.value = id;
+  isModalOpen.value = true;
+}
+
 async function getTrails(parameters: RequestParameters = {}) {
   // if (user.value.role === "guide") {
   //   parameters.creator = user.value.id;
@@ -57,5 +75,11 @@ async function getTrails(parameters: RequestParameters = {}) {
   isLoading.value = false;
 }
 
-onMounted(() => getTrails());
+async function deleteTrail() {
+  isLoading.value = true;
+  await trailsStore.deleteTrail(trailToDelete.value);
+  isLoading.value = false;
+}
+
+onMounted(() => getTrails({ sort: "name", order: "asc", search: "" }));
 </script>

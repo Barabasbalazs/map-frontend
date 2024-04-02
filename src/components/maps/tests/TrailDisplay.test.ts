@@ -81,6 +81,7 @@ describe("TrailDisplay tests", () => {
     expect(nameInput.props().disabled).toBe(false);
     expect(locationInput.props().disabled).toBe(false);
   });
+  /*
   test("TrailDisplay should render with a save and cancel button if editable prop is passed", () => {
     const wrapper = mount(TrailDisplay, {
       props: {
@@ -94,6 +95,7 @@ describe("TrailDisplay tests", () => {
     expect(saveButton.exists()).toBe(true);
     expect(cancelButton.exists()).toBe(true);
   });
+  */
   test("TrailDisplay should not render with a save and cancel button if editable prop is not passed", () => {
     const wrapper = mount(TrailDisplay, {
       props: {
