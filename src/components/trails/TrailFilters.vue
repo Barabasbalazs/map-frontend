@@ -8,15 +8,15 @@
         label="Sort"
         :options="['name', 'location', 'creator']"
       />
-    </div>
-    <div class="flex justify-center">
       <SelectInput
-        class="w-1/4"
         v-model="filters.order"
         id="order"
         label="Order"
         :options="['asc', 'desc']"
       />
+      <div class="flex items-center">
+        <RouterLink id="my-trails-link" to="/my-trails" class="text-blue-700">My Trails</RouterLink>
+      </div>
     </div>
   </div>
 </template>

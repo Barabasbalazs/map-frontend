@@ -67,9 +67,6 @@ function openDeleteModal(id: string) {
 }
 
 async function getTrails(parameters: RequestParameters = {}) {
-  // if (user.value.role === "guide") {
-  //   parameters.creator = user.value.id;
-  // }
   isLoading.value = true;
   await trailsStore.getTrails(parameters);
   isLoading.value = false;
@@ -82,7 +79,14 @@ async function deleteTrail() {
 }
 
 onMounted(async () => {
-  await Promise.all([getTrails({ sort: "name", order: "asc", search: "" }), authStore.getUser()]);
+  if (user.value.role === "guide") {
+    getTrails({ sort: "name", order: "asc", search: "" });
+  } else {
+    await Promise.all([
+      getTrails({ sort: "name", order: "asc", search: "" }),
+      authStore.getUser(),
+    ]);
+  }
   isLoading.value = false;
 });
 </script>

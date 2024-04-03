@@ -1,8 +1,10 @@
 import TrailFilters from "../TrailFilters.vue";
 import BaseInput from "../../shared/BaseInput.vue";
 import SelectInput from "../../shared/SelectInput.vue";
-import { describe, test, expect } from "vitest";
-import { mount } from "@vue/test-utils";
+import { Router, createRouter, createWebHistory } from "vue-router";
+import router from "../../../routing/router";
+import { describe, test, expect, afterEach, beforeEach } from "vitest";
+import { mount, enableAutoUnmount } from "@vue/test-utils";
 
 const mockedUser = {
   id: 1,
@@ -10,6 +12,16 @@ const mockedUser = {
   name: "mockedUser",
   role: "user",
 };
+
+enableAutoUnmount(afterEach);
+
+let localRouter: Router;
+beforeEach(async () => {
+  localRouter = createRouter({
+    history: createWebHistory(),
+    routes: router.options.routes,
+  });
+});
 
 describe("TrailFilters tests", () => {
     test("TrailFilters component renders correctly", () => {
@@ -30,11 +42,13 @@ describe("TrailFilters tests", () => {
         const searchInput = wrapper.get("#search").findComponent(BaseInput);
         const sortingInput = wrapper.get("#sort").findComponent(SelectInput);
         const orderInput = wrapper.get("#order").findComponent(SelectInput);
+        const myTrailsLink = wrapper.get("#my-trails-link")//.findComponent(RouterLink);
         expect(searchInput.exists()).toBe(true);
         expect(sortingInput.exists()).toBe(true);
         expect(sortingInput.props().options).toEqual(["name", "location", "creator"]);
         expect(orderInput.props().options).toEqual(["asc", "desc"]);
         expect(orderInput.exists()).toBe(true);
+        expect(myTrailsLink.attributes("to")).toBe("/my-trails");
     });
     test("TrailFilter emits the search options when parameters change", async () => {
         const wrapper = mount(TrailFilters, {
@@ -63,4 +77,5 @@ describe("TrailFilters tests", () => {
             },
         ]);
     });
+
 });
