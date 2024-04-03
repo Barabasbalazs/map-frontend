@@ -28,10 +28,16 @@ describe("Auth Store tests", () => {
       })
     );
 
-    await authStore.login({ email: userCredentials.email, password: '123456789'});
-  
+    await authStore.login({
+      email: userCredentials.email,
+      password: "123456789",
+    });
+
     expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/auth/login", {
-      body: JSON.stringify({email: userCredentials.email, password: '123456789'}),
+      body: JSON.stringify({
+        email: userCredentials.email,
+        password: "123456789",
+      }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
       mode: "cors",
@@ -42,10 +48,20 @@ describe("Auth Store tests", () => {
     globalThis.fetch = vi.fn().mockResolvedValue(
       createFetchResponse({
         user: userCredentials,
-        authToken: "testToken",}));
-    await authStore.register({ email: userCredentials.email, password: '123456789', name: userCredentials.name });
+        authToken: "testToken",
+      })
+    );
+    await authStore.register({
+      email: userCredentials.email,
+      password: "123456789",
+      name: userCredentials.name,
+    });
     expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/auth/signup", {
-      body: JSON.stringify({email: userCredentials.email, password: '123456789', name: userCredentials.name}),
+      body: JSON.stringify({
+        email: userCredentials.email,
+        password: "123456789",
+        name: userCredentials.name,
+      }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
       mode: "cors",
@@ -62,5 +78,27 @@ describe("Auth Store tests", () => {
     authStore.user = { ...userCredentials, trails: ["1", "2"] };
     authStore.removeTrailFromUser("2");
     expect(authStore.user.trails).toEqual(["1"]);
+  });
+  test("GetUser should send fetch request with user id and authToken", async () => {
+    const authStore = useAuthStore();
+    authStore.user = userCredentials;
+    authStore.authToken = "testToken";
+    globalThis.fetch = vi.fn().mockResolvedValue(
+      createFetchResponse({
+        userCredentials,
+      })
+    );
+    await authStore.getUser();
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/v1/administration/users/1",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer testToken",
+        },
+        method: "GET",
+        mode: "cors",
+      }
+    );
   });
 });

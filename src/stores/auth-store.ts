@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { User } from "../models/user-model";
 import { useTrailsStore } from "./trails-store";
 import authService from "../services/auth-service";
+import administrationService from "../services/administration-service";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -36,11 +37,25 @@ export const useAuthStore = defineStore("auth", {
       }
       return response || null;
     },
+    async getUser(): Promise<Partial<User> | null> {
+      const response = await administrationService.getUser(
+        this.user.id,
+        this.authToken
+      );
+
+      if ("message" in response && response.message) {
+        return null;
+      }
+      this.user = response;
+      return (response as Partial<User>) || null;
+    },
     addTrailToUser(trailId: string) {
       this.user.trails.push(trailId);
     },
     removeTrailFromUser(trailId: string) {
-      this.user.trails = this.user.trails.filter((id: string) => id !== trailId);
+      this.user.trails = this.user.trails.filter(
+        (id: string) => id !== trailId
+      );
     },
   },
   persist: {

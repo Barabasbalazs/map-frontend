@@ -65,14 +65,64 @@ describe("Trails Store tests", () => {
 
     await trailsStore.subscribeToTrail("1");
 
-    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/trails/1/subscribe", {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer authToken"
-      },
-      body: JSON.stringify({ "id": "1" }),
-      method: "PATCH",
-      mode: "cors",
-    });
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/v1/trails/1/subscribe",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer authToken",
+        },
+        body: JSON.stringify({ id: "1" }),
+        method: "PATCH",
+        mode: "cors",
+      }
+    );
+  });
+  test("Unsubscribe from trail should send fetch request with provided trailId and authToken", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+    authStore.authToken = "authToken";
+    authStore.user = { id: "1", email: "mmm@mail.com", trails: ["1"] };
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(createFetchResponse([mockedTrailResponse]));
+
+    await trailsStore.unsubscribeFromTrail("1");
+
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/v1/trails/1/unsubscribe",
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer authToken",
+        },
+     
+        mode: "cors",
+      }
+    );
+  });
+  test("Delete trail should send fetch request with provided trailId and authToken and remove the trail from store", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+    authStore.authToken = "authToken";
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(createFetchResponse([mockedTrailResponse]));
+
+    await trailsStore.deleteTrail("1");
+
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/v1/trails/1",
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer authToken",
+        },
+        mode: "cors",
+      }
+    );
+    expect(trailsStore.trails).toEqual([]);
   });
 });

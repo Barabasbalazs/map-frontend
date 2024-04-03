@@ -81,5 +81,8 @@ async function deleteTrail() {
   isLoading.value = false;
 }
 
-onMounted(() => getTrails({ sort: "name", order: "asc", search: "" }));
+onMounted(async () => {
+  await Promise.all([getTrails({ sort: "name", order: "asc", search: "" }), authStore.getUser()]);
+  isLoading.value = false;
+});
 </script>

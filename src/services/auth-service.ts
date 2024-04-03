@@ -24,7 +24,7 @@ const authService = {
       params: user,
     });
     return await parseResponse(resp);
-  },
+  }
 };
 
 export default authService;
