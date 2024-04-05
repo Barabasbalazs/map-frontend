@@ -34,7 +34,7 @@
 </template>
 <script setup lang="ts">
 import PageLayout from "../components/shared/PageLayout.vue";
-import TrailDisplay from "../components/maps/TrailDisplay.vue";
+import TrailDisplay from "../components/trails/TrailDisplay.vue";
 import TrailFilters from "../components/trails/TrailFilters.vue";
 import Loader from "../components/shared/LoadingAnimation.vue";
 import BaseModal from "../components/shared/BaseModal.vue";
@@ -51,7 +51,8 @@ const isModalOpen = ref(false);
 const trailToDelete = ref("");
 
 const user = computed(() => authStore.user);
-const trails = computed(() => trailsStore.trails);
+const trails = ref([]);
+//const trails = computed(() => trailsStore.trails);
 
 /*
 const emptyTrail = {
@@ -68,7 +69,10 @@ function openDeleteModal(id: string) {
 
 async function getTrails(parameters: RequestParameters = {}) {
   isLoading.value = true;
-  await trailsStore.getTrails(parameters);
+  const resp = await trailsStore.getTrails(parameters);
+  if (resp) {
+    trails.value = resp;
+  }
   isLoading.value = false;
 }
 

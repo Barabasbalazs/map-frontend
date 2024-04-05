@@ -1,7 +1,7 @@
 import TrailFilters from "../TrailFilters.vue";
 import BaseInput from "../../shared/BaseInput.vue";
 import SelectInput from "../../shared/SelectInput.vue";
-import { Router, createRouter, createWebHistory } from "vue-router";
+import {  createRouter, createWebHistory } from "vue-router";
 import router from "../../../routing/router";
 import { describe, test, expect, afterEach, beforeEach } from "vitest";
 import { mount, enableAutoUnmount } from "@vue/test-utils";
@@ -15,9 +15,9 @@ const mockedUser = {
 
 enableAutoUnmount(afterEach);
 
-let localRouter: Router;
+//let localRouter: Router;
 beforeEach(async () => {
-  localRouter = createRouter({
+  createRouter({
     history: createWebHistory(),
     routes: router.options.routes,
   });
