@@ -15,7 +15,7 @@ const mockedUser = {
 
 enableAutoUnmount(afterEach);
 
-//let localRouter: Router;
+
 beforeEach(async () => {
   createRouter({
     history: createWebHistory(),

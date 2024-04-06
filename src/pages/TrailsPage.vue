@@ -51,8 +51,7 @@ const isModalOpen = ref(false);
 const trailToDelete = ref("");
 
 const user = computed(() => authStore.user);
-const trails = ref([]);
-//const trails = computed(() => trailsStore.trails);
+const trails = computed(() => trailsStore.trails);
 
 /*
 const emptyTrail = {
@@ -69,10 +68,7 @@ function openDeleteModal(id: string) {
 
 async function getTrails(parameters: RequestParameters = {}) {
   isLoading.value = true;
-  const resp = await trailsStore.getTrails(parameters);
-  if (resp) {
-    trails.value = resp;
-  }
+  await trailsStore.getTrails(parameters);
   isLoading.value = false;
 }
 

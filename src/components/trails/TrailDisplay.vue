@@ -94,17 +94,15 @@ let leafletService = null;
 
 const trailsStore = useTrailsStore();
 
-//known issue here, the init map is called twice on mounting
 const isLoading = ref(false);
-const initialMount = ref(true);
 const mapContainer = ref();
 const editMode = ref(props.editable);
-//const originalTrail = ref(props.trail);
-
-const localTrail = computed({
-  get: () => props.trail,
-  set: (value: Trail) => value,
+const originalTrail = ref({
+  ...trailsStore.trails.find((trail) => trail._id === props.trail._id),
 });
+
+const localTrail = ref({ ...props.trail });
+
 const isSubscribed = computed(() =>
   props.user?.trails?.includes(props.trail._id)
 );
@@ -117,7 +115,9 @@ function maxAbsoluteCoordinate(coordinates: number[]): number {
 }
 
 const meanCoordinates = computed(() => {
-  const coordinates = props.trail.path.flatMap((point) => point.coordinates);
+  const coordinates = localTrail.value.path.flatMap(
+    (point) => point.coordinates
+  );
   const latitudes = [];
   const longitudes = [];
   for (const coordinate of coordinates) {
@@ -163,6 +163,7 @@ function handleEdit() {
 }
 
 function cancelEdit() {
+  localTrail.value = { ...originalTrail.value };
   editMode.value = false;
 }
 
@@ -171,7 +172,10 @@ function handleDelete() {
 }
 
 function updatePathPoint(index: number, point: PathPoint) {
-  localTrail.value.path[index] = point;
+  localTrail.value = {
+    ...localTrail.value,
+    path: localTrail.value.path.map((p, i) => (i === index ? point : p)),
+  };
 }
 
 async function handleSubscribe() {
@@ -180,22 +184,16 @@ async function handleSubscribe() {
     ? await trailsStore.unsubscribeFromTrail(props.trail._id)
     : await trailsStore.subscribeToTrail(props.trail._id);
   if (reponse) {
-    localTrail.value = reponse;
+    localTrail.value = { ...reponse };
   }
   isLoading.value = false;
 }
 
-onMounted(() => {
-  initMap(props.trail);
-  initialMount.value = false;
-});
+onMounted(() => initMap(props.trail));
 
 watch(
-  () => [props.trail.path, editMode.value],
-  () => {
-    if (initialMount.value) return;
-    initMap(localTrail.value);
-  },
+  () => [props.trail.path, editMode.value, localTrail.value.path],
+  () => initMap(localTrail.value),
   { deep: true }
 );
 </script>
