@@ -18,10 +18,16 @@
         :disabled="!editMode"
       />
     </div>
-    <div class="h-80 w-full" ref="mapContainer" />
+    <!-- this is the mapcontainer-->
+    <div
+      id="trailMapContainer"
+      @click="addPathPoint"
+      class="h-80 w-full"
+      ref="mapContainer"
+    />
 
     <template v-if="editMode">
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col">
         <EditablePathPoint
           v-for="(point, ind) in localTrail.path"
           :model-value="point"
@@ -49,7 +55,7 @@
       v-else-if="editMode"
       class="flex items-center justify-center gap-2 pt-5 pb-2"
     >
-      <BaseButton id="save" :disabled="isLoading">Save</BaseButton>
+      <BaseButton id="save" :disabled="isLoading" @click="sendTrail">Save</BaseButton>
       <BaseButton
         id="cancel"
         :disabled="isLoading"
@@ -178,6 +184,35 @@ function updatePathPoint(index: number, point: PathPoint) {
   };
 }
 
+async function addPathPoint() {
+  if (!editMode.value) return;
+
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  const lastIndex = leafletService.getMarkerMapping().size;
+
+  const coordinates = leafletService
+    .getMarkerMapping()
+    .get((lastIndex - 1).toString())._latlng;
+
+  if (
+    localTrail.value.path.find((point) => point.coordinates.lat === coordinates.lat && point.coordinates.lng === coordinates.lng)
+  ) return;
+
+  localTrail.value = {
+    ...localTrail.value,
+    path: [
+      ...localTrail.value.path,
+      {
+        coordinates: {
+          lat: coordinates.lat,
+          lng: coordinates.lng,
+        },
+        name: "",
+      },
+    ],
+  };
+}
+
 async function handleSubscribe() {
   isLoading.value = true;
   const reponse = isSubscribed.value
@@ -185,6 +220,17 @@ async function handleSubscribe() {
     : await trailsStore.subscribeToTrail(props.trail._id);
   if (reponse) {
     localTrail.value = { ...reponse };
+  }
+  isLoading.value = false;
+}
+
+async function sendTrail() {
+  isLoading.value = true;
+  const response = await trailsStore.updateTrail(localTrail.value);
+  if (response) {
+    localTrail.value = { ...response };
+    originalTrail.value = { ...response };
+    editMode.value = false;
   }
   isLoading.value = false;
 }

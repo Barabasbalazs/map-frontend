@@ -29,6 +29,18 @@ const trailsService = {
     });
     return await parseResponse(resp);
   },
+  updateTrail: async (
+    trail: Trail,
+    authToken: string
+  ): Promise<Trail | null> => {     
+    delete trail.creator;
+    const resp = await request.patch<Partial<Trail>>({
+      url: `${trailsUrl}/${trail.id || trail._id}`,
+      authToken: authToken,
+      params: trail,
+    });
+    return await parseResponse(resp);
+  },
   subscribeToTrail: async (
     trailId: string,
     authToken: string
