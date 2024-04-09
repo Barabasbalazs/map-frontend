@@ -33,7 +33,7 @@ describe("Trails Store tests", () => {
     const trailsStore = useTrailsStore();
     globalThis.fetch = vi
       .fn()
-      .mockResolvedValue(createFetchResponse([mockedTrailResponse]));
+      .mockResolvedValue(createFetchResponse([{...mockedTrailResponse, creator: [mockedTrailResponse.creator]}]));
 
     await trailsStore.getTrails({
       creator: 1,

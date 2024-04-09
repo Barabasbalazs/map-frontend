@@ -90,10 +90,12 @@ const props = defineProps<{
   trail: Trail;
   user: Partial<User>;
   editable?: boolean;
+  isCreating?: boolean;
 }>();
 
 const emit = defineEmits<{
   delete: [id: string];
+  create: [trail: Trail];
 }>();
 
 let leafletService = null;
@@ -113,7 +115,7 @@ const isSubscribed = computed(() =>
   props.user?.trails?.includes(props.trail._id)
 );
 const isCreator = computed(
-  () => props.user?.id === props.trail?.creator[0]?.id
+  () => props.user?.id === props.trail?.creator?.id
 );
 
 function maxAbsoluteCoordinate(coordinates: number[]): number {
@@ -169,6 +171,10 @@ function handleEdit() {
 }
 
 function cancelEdit() {
+  if (props.isCreating) {
+    emit("delete", '0');
+    return;
+  }
   localTrail.value = { ...originalTrail.value };
   editMode.value = false;
 }
@@ -226,6 +232,10 @@ async function handleSubscribe() {
 
 async function sendTrail() {
   isLoading.value = true;
+  if (props.isCreating) {
+    emit("create", localTrail.value);
+    return;
+  }
   const response = await trailsStore.updateTrail(localTrail.value);
   if (response) {
     localTrail.value = { ...response };

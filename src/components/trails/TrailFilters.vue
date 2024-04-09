@@ -15,7 +15,9 @@
         :options="['asc', 'desc']"
       />
       <div class="flex items-center">
-        <RouterLink id="my-trails-link" to="/my-trails" class="text-blue-700">My Trails</RouterLink>
+        <RouterLink id="my-trails-link" :to="isGuide ? '/my-trails' : '/subscribed-trails'" class="text-blue-700">{{
+          isGuide ? "My Trails" : "Subscribed Trails"
+        }}</RouterLink>
       </div>
     </div>
   </div>
@@ -26,9 +28,9 @@ import SelectInput from "../shared/SelectInput.vue";
 import { User } from "../../models/user-model";
 import { RequestParameters } from "../../types/request-parameter";
 import { debouncedWatch } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
-defineProps<{
+const props = defineProps<{
   user: Partial<User>;
 }>();
 
@@ -41,6 +43,8 @@ const filters = ref<RequestParameters>({
   order: "asc",
   search: "",
 });
+
+const isGuide = computed(() => props.user.role === "guide");
 
 debouncedWatch(
   () => [filters.value.sort, filters.value.order, filters.value.search],

@@ -15,6 +15,11 @@ const routes = [
   { path: "/login", name: "Login Page", component: LoginPage },
   { path: "/trails", name: "Trails Page", component: TrailsPage },
   { path: "/my-trails", name: "My Trails Page", component: UserTrailsPage },
+  {
+    path: "/subscribed-trails",
+    name: "Subscribed Trails Page",
+    component: UserTrailsPage,
+  },
   { path: "/:pathMatch(.*)*", name: "NotFound Page", component: NotFoundPage },
 ];
 

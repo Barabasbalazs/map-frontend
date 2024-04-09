@@ -17,7 +17,15 @@ const trailsService = {
       params,
       authToken: authToken,
     });
-    return await parseResponse(resp);
+    const trails = await parseResponse(resp);
+    if (trails && trails.length) {
+      const mappedTrails = trails.map((trail: any) => ({
+        ...trail,
+        creator: trail.creator?.[0],
+      }));
+      return mappedTrails;
+    }
+    return null;
   },
   deleteTrail: async (
     trailId: string,
@@ -32,10 +40,21 @@ const trailsService = {
   updateTrail: async (
     trail: Trail,
     authToken: string
-  ): Promise<Trail | null> => {     
+  ): Promise<Trail | null> => {
     delete trail.creator;
     const resp = await request.patch<Partial<Trail>>({
       url: `${trailsUrl}/${trail.id || trail._id}`,
+      authToken: authToken,
+      params: trail,
+    });
+    return await parseResponse(resp);
+  },
+  createTrail: async (
+    trail: Trail,
+    authToken: string
+  ): Promise<Trail | null> => {
+    const resp = await request.post<Partial<Trail>>({
+      url: trailsUrl,
       authToken: authToken,
       params: trail,
     });
@@ -58,6 +77,20 @@ const trailsService = {
   ): Promise<Trail | null> => {
     const resp = await request.delete({
       url: `${trailsUrl}/${trailId}/unsubscribe`,
+      authToken: authToken,
+    });
+    return await parseResponse(resp);
+  },
+  getSubscribedTrails: async (authToken: string): Promise<Trail[] | []> => {
+    const resp = await request.get({
+      url: `${trailsUrl}/subscribed`,
+      authToken: authToken,
+    });
+    return await parseResponse(resp);
+  },
+  getCreatedTrails: async (authToken: string): Promise<Trail[] | []> => {
+    const resp = await request.get({
+      url: `${trailsUrl}/my-trails`,
       authToken: authToken,
     });
     return await parseResponse(resp);

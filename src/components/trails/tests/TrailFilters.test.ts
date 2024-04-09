@@ -48,7 +48,7 @@ describe("TrailFilters tests", () => {
         expect(sortingInput.props().options).toEqual(["name", "location", "creator"]);
         expect(orderInput.props().options).toEqual(["asc", "desc"]);
         expect(orderInput.exists()).toBe(true);
-        expect(myTrailsLink.attributes("to")).toBe("/my-trails");
+        expect(myTrailsLink.attributes("to")).toBe("/subscribed-trails");
     });
     test("TrailFilter emits the search options when parameters change", async () => {
         const wrapper = mount(TrailFilters, {

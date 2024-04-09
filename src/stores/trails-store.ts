@@ -7,6 +7,8 @@ import { RequestParameters } from "../types/request-parameter";
 export const useTrailsStore = defineStore("trails", {
   state: () => ({
     trails: [] as Trail[],
+    subscribedTrails: [] as Trail[],
+    createdTrails: [] as Trail[],
   }),
   actions: {
     async getTrails(params: RequestParameters): Promise<Trail[] | void> {
@@ -37,12 +39,44 @@ export const useTrailsStore = defineStore("trails", {
         useAuthStore().authToken
       );
       if (response) {
-        this.trails = this.trails.filter((trail: Trail) => (trail.id || trail._id) !== trailId);
+        this.trails = this.trails.filter(
+          (trail: Trail) => (trail.id || trail._id) !== trailId
+        );
+      }
+      return response;
+    },
+    async createTrail(trail: Trail): Promise<Trail | void> {
+      const response = await trailsService.createTrail(
+        trail,
+        useAuthStore().authToken
+      );
+      if (response) {
+        this.createdTrails = [...this.createdTrails, response];
+      }
+      return response;
+    },
+    async getSubscribedTrails(): Promise<Trail[] | void> {
+      const response = await trailsService.getSubscribedTrails(
+        useAuthStore().authToken
+      );
+      if (response) {
+        this.subscribedTrails = response;
+      }
+      return response;
+    },
+    async getCreatedTrails(): Promise<Trail[] | void> {
+      const response = await trailsService.getCreatedTrails(
+        useAuthStore().authToken
+      );
+      if (response) {
+        this.createdTrails = response;
       }
       return response;
     },
     cleanStore() {
       this.trails = [];
+      this.subscribedTrails = [];
+      this.createdTrails = [];
     },
     async subscribeToTrail(trailId: string): Promise<Trail | void> {
       const response = await trailsService.subscribeToTrail(
@@ -51,6 +85,7 @@ export const useTrailsStore = defineStore("trails", {
       );
       if (response) {
         useAuthStore().addTrailToUser(trailId);
+        this.subscribedTrails = [...this.subscribedTrails, response];
       }
       return response;
     },
@@ -61,9 +96,12 @@ export const useTrailsStore = defineStore("trails", {
       );
       if (response) {
         useAuthStore().removeTrailFromUser(trailId);
+        this.subscribedTrails = this.subscribedTrails.filter(
+          (trail: Trail) => (trail.id || trail._id) !== trailId
+        );
       }
       return response;
-    }
+    },
   },
   persist: {
     enabled: true,

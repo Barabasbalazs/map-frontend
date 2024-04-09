@@ -1,7 +1,7 @@
 import { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { useAuthStore } from "../stores/auth-store";
 
-const userRestrictedRoutes = ["/tracking"];
+const userRestrictedRoutes = ["/tracking", "/my-trails"];
 
 const redirectService = {
   beforeEach: (

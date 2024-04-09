@@ -12,13 +12,6 @@
           @delete="openDeleteModal"
         />
       </template>
-      <!-- for adding new trails-->
-      <!-- <TrailDisplay
-        v-if="user.role === 'guide'"
-        :user="user"
-        :trail="emptyTrail"
-        editable
-      /> -->
     </div>
   </PageLayout>
   <BaseModal
@@ -52,14 +45,6 @@ const trailToDelete = ref("");
 
 const user = computed(() => authStore.user);
 const trails = computed(() => trailsStore.trails);
-
-/*
-const emptyTrail = {
-  name: "",
-  description: "",
-  path: [],
-};
-*/
 
 function openDeleteModal(id: string) {
   trailToDelete.value = id;
