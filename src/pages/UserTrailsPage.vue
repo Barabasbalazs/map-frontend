@@ -24,19 +24,32 @@
         />
       </template></div
   ></PageLayout>
+  <BaseModal
+    v-model:is-open="isModalOpen"
+    cancel
+    warning
+    @close="isModalOpen = false"
+    title="Delete Trail"
+    text="Are you sure you would like to delete this Trail? There may be users subscribed to it."
+    @confirm="deleteTrail(true)"
+    @cancel="isModalOpen = false"
+  />
 </template>
 <script setup lang="ts">
 import PageLayout from "../components/shared/PageLayout.vue";
 import Loader from "../components/shared/LoadingAnimation.vue";
 import TrailDisplay from "../components/trails/TrailDisplay.vue";
 import BaseButton from "../components/shared/BaseButton.vue";
+import BaseModal from "../components/shared/BaseModal.vue";
 import { Trail } from "../models/trail-model";
 import { useTrailsStore } from "../stores/trails-store";
 import { useAuthStore } from "../stores/auth-store";
+import { useTrails } from "../composables/trails";
 import { computed, ref, onMounted } from "vue";
 
 const trailsStore = useTrailsStore();
 const authStore = useAuthStore();
+const { isLoading, openDeleteModal, deleteTrail, isModalOpen} = useTrails();
 
 const emptyTrail = {
   name: "",
@@ -44,7 +57,6 @@ const emptyTrail = {
   path: [],
 };
 const isCreatingNewTrail = ref(false);
-const isLoading = ref(true);
 
 const user = computed(() => authStore.user);
 const isGuide = computed(() => user.value?.role === "guide");
@@ -54,9 +66,6 @@ const trails = computed(() =>
 const isButtonVisible = computed(
   () => isGuide.value && !isLoading.value && !isCreatingNewTrail.value
 );
-
-//probably put this into a composable for better code quality
-function openDeleteModal() {}
 
 async function createTrail(trail: Trail) {
   isLoading.value = true;

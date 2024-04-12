@@ -34,32 +34,19 @@ import BaseModal from "../components/shared/BaseModal.vue";
 import { RequestParameters } from "../types/request-parameter";
 import { useAuthStore } from "../stores/auth-store";
 import { useTrailsStore } from "../stores/trails-store";
-import { onMounted, computed, ref } from "vue";
+import { useTrails } from "../composables/trails";
+import { onMounted, computed } from "vue";
 
 const authStore = useAuthStore();
 const trailsStore = useTrailsStore();
-
-const isLoading = ref(true);
-const isModalOpen = ref(false);
-const trailToDelete = ref("");
+const { isLoading, openDeleteModal, deleteTrail, isModalOpen } = useTrails();
 
 const user = computed(() => authStore.user);
 const trails = computed(() => trailsStore.trails);
 
-function openDeleteModal(id: string) {
-  trailToDelete.value = id;
-  isModalOpen.value = true;
-}
-
 async function getTrails(parameters: RequestParameters = {}) {
   isLoading.value = true;
   await trailsStore.getTrails(parameters);
-  isLoading.value = false;
-}
-
-async function deleteTrail() {
-  isLoading.value = true;
-  await trailsStore.deleteTrail(trailToDelete.value);
   isLoading.value = false;
 }
 

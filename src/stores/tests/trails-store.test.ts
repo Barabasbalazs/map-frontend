@@ -17,11 +17,14 @@ const mockedTrailResponse = {
       ],
     },
   ],
+  /*
   creator: {
     id: "1",
     email: "creator@mail.com",
     role: "guide",
+    name: "Guide",
   },
+  */
 };
 
 beforeEach(() => {
@@ -105,6 +108,14 @@ describe("Trails Store tests", () => {
   test("Delete trail should send fetch request with provided trailId and authToken and remove the trail from store", async () => {
     const trailsStore = useTrailsStore();
     const authStore = useAuthStore();
+
+    trailsStore.trails = [{
+      ...mockedTrailResponse,
+      path: mockedTrailResponse.path.map((segment) => ({
+        ...segment,
+        coordinates: segment.coordinates[0], // Assuming there is only one set of coordinates
+      })),
+    }];
     authStore.authToken = "authToken";
     globalThis.fetch = vi
       .fn()
@@ -124,5 +135,39 @@ describe("Trails Store tests", () => {
       }
     );
     expect(trailsStore.trails).toEqual([]);
+  });
+  test("Delete trail should remove the trail from created trails if the corresponding parameter is passed", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+
+    trailsStore.trails = [{
+      ...mockedTrailResponse,
+      path: mockedTrailResponse.path.map((segment) => ({
+        ...segment,
+        coordinates: segment.coordinates[0], // Assuming there is only one set of coordinates
+      })),
+    }];
+    trailsStore.createdTrails = trailsStore.trails;
+    authStore.authToken = "authToken";
+
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(createFetchResponse([mockedTrailResponse]));
+
+    await trailsStore.deleteTrail("1", true);
+
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/v1/trails/1",
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer authToken",
+        },
+        mode: "cors",
+      }
+    );
+    expect(trailsStore.trails).toEqual([]);
+    expect(trailsStore.createdTrails).toEqual([]);
   });
 });
