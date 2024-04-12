@@ -56,4 +56,15 @@ describe("Trails-service tests", () => {
       }
     );
   });
+  test("If request is not succesfull the function returns null", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue(
+      createFetchResponse({
+        status: 400,
+      })
+    );
+
+    const response = await trailsService.getTrails({}, 'token');
+
+    expect(response).toBeNull();
+  });
 });

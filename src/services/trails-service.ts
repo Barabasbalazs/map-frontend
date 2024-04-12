@@ -17,15 +17,7 @@ const trailsService = {
       params,
       authToken: authToken,
     });
-    const trails = await parseResponse(resp);
-    if (trails && trails.length) {
-      const mappedTrails = trails.map((trail: any) => ({
-        ...trail,
-        creator: trail.creator?.[0],
-      }));
-      return mappedTrails;
-    }
-    return null;
+    return await parseResponse(resp);
   },
   deleteTrail: async (
     trailId: string,
