@@ -27,6 +27,14 @@ const mockedTrailResponse = {
   */
 };
 
+const typeSafeTrail = {
+  ...mockedTrailResponse,
+  path: mockedTrailResponse.path.map((segment) => ({
+    ...segment,
+    coordinates: segment.coordinates[0], // Assuming there is only one set of coordinates
+  })),
+};
+
 beforeEach(() => {
   setActivePinia(createPinia());
 });
@@ -100,7 +108,7 @@ describe("Trails Store tests", () => {
           "Content-Type": "application/json",
           Authorization: "Bearer authToken",
         },
-     
+
         mode: "cors",
       }
     );
@@ -109,13 +117,15 @@ describe("Trails Store tests", () => {
     const trailsStore = useTrailsStore();
     const authStore = useAuthStore();
 
-    trailsStore.trails = [{
-      ...mockedTrailResponse,
-      path: mockedTrailResponse.path.map((segment) => ({
-        ...segment,
-        coordinates: segment.coordinates[0], // Assuming there is only one set of coordinates
-      })),
-    }];
+    trailsStore.trails = [
+      {
+        ...mockedTrailResponse,
+        path: mockedTrailResponse.path.map((segment) => ({
+          ...segment,
+          coordinates: segment.coordinates[0], // Assuming there is only one set of coordinates
+        })),
+      },
+    ];
     authStore.authToken = "authToken";
     globalThis.fetch = vi
       .fn()
@@ -123,30 +133,21 @@ describe("Trails Store tests", () => {
 
     await trailsStore.deleteTrail("1");
 
-    expect(fetch).toHaveBeenCalledWith(
-      "http://localhost:8080/v1/trails/1",
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer authToken",
-        },
-        mode: "cors",
-      }
-    );
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/trails/1", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer authToken",
+      },
+      mode: "cors",
+    });
     expect(trailsStore.trails).toEqual([]);
   });
   test("Delete trail should remove the trail from created trails if the corresponding parameter is passed", async () => {
     const trailsStore = useTrailsStore();
     const authStore = useAuthStore();
 
-    trailsStore.trails = [{
-      ...mockedTrailResponse,
-      path: mockedTrailResponse.path.map((segment) => ({
-        ...segment,
-        coordinates: segment.coordinates[0], // Assuming there is only one set of coordinates
-      })),
-    }];
+    trailsStore.trails = [typeSafeTrail];
     trailsStore.createdTrails = trailsStore.trails;
     authStore.authToken = "authToken";
 
@@ -156,10 +157,86 @@ describe("Trails Store tests", () => {
 
     await trailsStore.deleteTrail("1", true);
 
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/trails/1", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer authToken",
+      },
+      mode: "cors",
+    });
+    expect(trailsStore.trails).toEqual([]);
+    expect(trailsStore.createdTrails).toEqual([]);
+  });
+  test("Update trail should send fetch request with data, and update the stored trail", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+
+    trailsStore.trails = [typeSafeTrail];
+    authStore.authToken = "authToken";
+
+    const changedName = "Changed name";
+
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(
+        createFetchResponse({ ...mockedTrailResponse, name: changedName })
+      );
+
+    await trailsStore.updateTrail(typeSafeTrail);
+
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/trails/1", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer authToken",
+      },
+      mode: "cors",
+      body: JSON.stringify(typeSafeTrail),
+    });
+
+    expect(trailsStore.trails?.[0].name).toEqual(changedName);
+  });
+  test("Create trail calls correct endpoint and sets it in the created trails", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+
+    authStore.authToken = "authToken";
+
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(createFetchResponse(mockedTrailResponse));
+
+    await trailsStore.createTrail(typeSafeTrail);
+
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/v1/trails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer authToken",
+      },
+      mode: "cors",
+      body: JSON.stringify(typeSafeTrail),
+    });
+
+    expect(trailsStore.createdTrails).toEqual([mockedTrailResponse]);
+  });
+  test("GetSubscribed trails calls correct endpoint and sets it in the subscribed trails", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+
+    authStore.authToken = "authToken";
+
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(createFetchResponse([mockedTrailResponse]));
+
+    await trailsStore.getSubscribedTrails();
+
     expect(fetch).toHaveBeenCalledWith(
-      "http://localhost:8080/v1/trails/1",
+      "http://localhost:8080/v1/trails/subscribed",
       {
-        method: "DELETE",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer authToken",
@@ -167,7 +244,33 @@ describe("Trails Store tests", () => {
         mode: "cors",
       }
     );
-    expect(trailsStore.trails).toEqual([]);
-    expect(trailsStore.createdTrails).toEqual([]);
+
+    expect(trailsStore.subscribedTrails).toEqual([mockedTrailResponse]);
+  });
+  test("GetCreated trails calls correct endpoint and sets it in the created trails", async () => {
+    const trailsStore = useTrailsStore();
+    const authStore = useAuthStore();
+
+    authStore.authToken = "authToken";
+
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValue(createFetchResponse([mockedTrailResponse]));
+
+    await trailsStore.getCreatedTrails();
+
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/v1/trails/my-trails",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer authToken",
+        },
+        mode: "cors",
+      }
+    );
+
+    expect(trailsStore.createdTrails).toEqual([mockedTrailResponse]);
   });
 });
