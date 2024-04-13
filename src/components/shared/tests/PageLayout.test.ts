@@ -27,4 +27,20 @@ describe("PageLayout tests", () => {
     expect(useAuthStore().user).toStrictEqual({});
     expect(useAuthStore().authToken).toBe("");
   });
+  test("If user is Admin admin redirect apears", async () => {
+    useAuthStore().user = { ...testUser, role: "admin" };
+    const wrapper = mount(PageLayout);
+    const redirect = wrapper.find("#administration");
+    expect(redirect.exists()).toBe(true);
+    expect(redirect.text()).toBe("Administration");
+    expect(redirect.attributes("to")).toBe("/administration");
+  })
+  test("If user is not Admin only account settings apear", async () => {
+    useAuthStore().user = testUser;
+    const wrapper = mount(PageLayout);
+    const redirect = wrapper.find("#administration");
+    expect(redirect.exists()).toBe(true);
+    expect(redirect.text()).toBe("Account settings");
+    expect(redirect.attributes("to")).toBe("/administration");
+  })
 });

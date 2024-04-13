@@ -10,6 +10,7 @@
     </div>
     <div v-if="isAuthenticated" class="flex flex-col items-center justify-center py-8 gap-2">
       <p>{{ user?.name || user?.email }} ({{ capitalizeFirstLetter(user?.role) }})</p>
+      <router-link id="administration" to="/administration">{{ isAdmin ? 'Administration' : 'Account settings' }}</router-link>
       <button id="logout-button" @click="logoutUser">Logout</button>
     </div>
   </div>
@@ -33,6 +34,7 @@ const authStore = useAuthStore();
 
 const user = computed(() => authStore.user);
 const isAuthenticated = computed(() => Object.keys(user.value).length);
+const isAdmin = computed(() => user.value?.role === 'admin');
 
 async function logoutUser() {
   await authStore.logout();
