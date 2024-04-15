@@ -1,5 +1,6 @@
 import UserCard from "../UserCard.vue";
 import BaseInput from "../../shared/BaseInput.vue";
+import SelectInput from "../../shared/SelectInput.vue";
 import { setActivePinia, createPinia } from "pinia";
 import { useAuthStore } from "../../../stores/auth-store";
 import { useAdministrationStore } from "../../../stores/administration-store";
@@ -277,5 +278,73 @@ describe("UserCard component", () => {
     await new Promise((r) => setTimeout(r, 100));
 
     expect(useAdministrationStore().users).toEqual([]);
+  });
+  test("Only admin users should see the option to change roles, if the user in the card is not the admin", async () => {
+    useAuthStore().user = { ...mockedUser, role: "admin" };
+    const wrapper = mount(UserCard, {
+      props: {
+        user: {
+          ...mockedUser,
+          id: "notAdmin",
+        },
+      },
+    });
+
+    const selectInput = wrapper.find("#role").getComponent(SelectInput);
+    expect(selectInput).toBeDefined();
+
+    const selectInputField = selectInput.find("select");
+    expect(selectInputField).toBeDefined();
+
+    useAuthStore().user = { ...mockedUser, role: "user" };
+
+    await wrapper.vm.$nextTick();
+
+    const selectInput2 = wrapper.find("#role");
+    expect(selectInput2.exists()).toBe(false);
+
+    useAuthStore().user = { ...mockedUser, role: "admin" };
+
+    wrapper.unmount();
+
+    const wrapper2 = mount(UserCard, {
+      props: {
+        user: {
+          ...mockedUser,
+          role: "admin",
+        },
+      },
+    });
+
+    await wrapper2.vm.$nextTick();
+
+    const selectInput3 = wrapper2.find("#role");
+    expect(selectInput3.exists()).toBe(false);
+  });
+  test("If the user is an admin, the role can be changed", async () => {
+    useAuthStore().user = { ...mockedUser, role: "admin" };
+    useAdministrationStore().users = [mockedUser];
+
+    globalThis.fetch = vi.fn().mockResolvedValue(
+      createFetchResponse({
+        user: { ...mockedUser, role: "admin" },
+      }));
+
+    const wrapper = mount(UserCard, {
+      props: {
+        user: {
+          ...mockedUser,
+          id: "notAdmin",
+          role: "user",
+        },
+      },
+    });
+
+    const selectInput = wrapper.find("#role").getComponent(SelectInput);
+    const selectInputField = selectInput.find("select");
+
+    await selectInputField.setValue("admin");
+
+    expect(selectInputField.element.value).toBe("admin");
   });
 });

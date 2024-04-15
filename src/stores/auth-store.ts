@@ -52,6 +52,7 @@ export const useAuthStore = defineStore("auth", {
       return (response as Partial<User>) || null;
     },
     async updateUser(user: Partial<User>): Promise<Partial<User> | null> {
+      delete user.role;
       const response = await administrationService.updateUser(
         user,
         this.authToken

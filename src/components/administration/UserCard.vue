@@ -15,6 +15,17 @@
         class="w-full"
         :disabled="!isEditing || isLoading"
       />
+      <SelectInput
+        v-if="isAdmin && modelValue.id !== loggedInUser.id"
+        id="role"
+        v-model="modelValue.role"
+        label="Role"
+        :disabled="!isEditing || isLoading"
+        :options="roleOptions"
+        type="checkbox"
+      />
+    </div>
+    <div class="flex items-center justify-center gap-2">
       <BaseButton
         id="modifyUser"
         :disabled="isLoading"
@@ -34,6 +45,8 @@
 <script setup lang="ts">
 import BaseInput from "../shared/BaseInput.vue";
 import BaseButton from "../shared/BaseButton.vue";
+import SelectInput from "../shared/SelectInput.vue";
+import roleOptions from "../../constants/roles";
 import { User } from "../../models/user-model";
 import { useAdministrationStore } from "../../stores/administration-store";
 import { useAuthStore } from "../../stores/auth-store";
@@ -51,7 +64,8 @@ const isEditing = ref(false);
 const originalUser = ref({ ...props.user });
 const modelValue = ref(props.user);
 
-const isAdmin = computed(() => authStore.user?.role === "admin");
+const loggedInUser = computed(() => authStore.user as User);
+const isAdmin = computed(() => loggedInUser.value?.role === "admin");
 
 function cancelEdit() {
   modelValue.value = { ...originalUser.value };
@@ -60,9 +74,10 @@ function cancelEdit() {
 
 async function updateUser() {
   isLoading.value = true;
-  const newUser = isAdmin.value
-    ? await administrationStore.updateUser(modelValue.value)
-    : await authStore.updateUser(modelValue.value);
+  const newUser =
+    loggedInUser.value?.id === modelValue.value?.id 
+      ? await authStore.updateUser(modelValue.value)
+      : await administrationStore.updateUser(modelValue.value);
   if (newUser) {
     originalUser.value = { ...newUser } as User;
   }

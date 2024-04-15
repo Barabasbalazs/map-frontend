@@ -3,14 +3,17 @@
     ><div class="flex flex-col gap-4 items-center">
       <LoadingAnimation v-if="isLoading" />
       <template v-else>
-        <template v-if="isAdmin"
-          ><UserCard
+        <template v-if="isAdmin">
+          <h2 class="text-2xl">Account Settings</h2>
+          <UserCard :user="user" />
+          <h2 class="text-2xl">Users</h2>
+          <UserCard
             v-for="user in allNonAdminUsers"
             :key="user.id"
             :user="user"
         /></template>
 
-        <UserCard  v-else :user="user" />
+        <UserCard v-else :user="user" />
       </template></div
   ></PageLayout>
 </template>
@@ -34,7 +37,7 @@ const isAdmin = computed(() => user.value?.role === "admin");
 
 onMounted(async () => {
   isAdmin.value
-    ? await administrationStore.getUsers()
+    ? await Promise.all([administrationStore.getUsers(), authStore.getUser()])
     : await authStore.getUser();
   isLoading.value = false;
 });

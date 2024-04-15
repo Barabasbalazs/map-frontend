@@ -22,15 +22,20 @@ export const useAdministrationStore = defineStore("administration", {
         user,
         useAuthStore().authToken
       );
-      if (response) {
+      if (response && response.role === "admin") {
+        this.users = this.users?.filter((u: User) => u.id !== response.id);
+      } else if (response) {
         this.users = this.users?.map((u: User) =>
           u.id === response.id ? response : u
         );
       }
       return response;
     },
-    async deleteUser(id: string): Promise<void>{
-      const response = await administrationService.deleteUser(id, useAuthStore().authToken);
+    async deleteUser(id: string): Promise<void> {
+      const response = await administrationService.deleteUser(
+        id,
+        useAuthStore().authToken
+      );
       if (response.message) {
         this.users = this.users?.filter((u: User) => u.id !== id);
       }

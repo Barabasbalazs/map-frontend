@@ -10,7 +10,7 @@
         :type="typeRef"
         :disabled="disabled"
         class="border-2 border-black rounded-xl px-2 py-1 focus:border-black"
-        :class="{ 'w-full' : typeRef !== 'checkbox'}"
+        :class="{ 'w-full' : typeRef !== 'checkbox', 'text-gray-600' : disabled}"
       />
       <label v-if="typeRef === 'checkbox'" class="pl-2">{{ label }}</label>
       <button v-if="type === 'password'" @click="typeRef = typeRef === 'text' ? 'password' : 'text'">

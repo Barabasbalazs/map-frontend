@@ -51,6 +51,7 @@ import BaseButton from "../shared/BaseButton.vue";
 import SelectInput from "../shared/SelectInput.vue";
 import { userAuthSchema } from "../../validation/user-parameters-validation";
 import { mapErroMessage } from "../../utils/validation-error-parser";
+import roleOptions from "../../constants/roles";
 import { ref } from "vue";
 
 const emit = defineEmits<{
@@ -75,8 +76,6 @@ const errors = ref({
 });
 
 const confirmPassword = ref("");
-
-const roleOptions = ["user", "admin", "guide"];
 
 async function validateForm() {
   errors.value = {
