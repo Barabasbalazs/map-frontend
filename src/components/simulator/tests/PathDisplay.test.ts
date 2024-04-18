@@ -105,6 +105,7 @@ describe("PathDisplay behaviour tests", () => {
   test("PathDisplay renders an error modal when there is no connection", async () => {
     const wrapper = mount(PathDisplayVue, {
       props: baseProps,
+      attachTo: document.body
     });
     await wrapper.find("input").setValue(0);
 

@@ -89,8 +89,8 @@ describe("UserCard component", () => {
 
     expect(wrapper.html()).toContain("Cancel");
   });
-  test("If user is Admin user sees delete button when not in edit mode", async () => {
-    useAuthStore().user = { ...mockedUser, role: "admin" };
+  test("If user is Admin user sees delete button when not in edit mode for other users", async () => {
+    useAuthStore().user = { ...mockedUser, id: "different", role: "admin" };
     const wrapper = mount(UserCard, {
       props: {
         user: { ...mockedUser },
@@ -98,6 +98,22 @@ describe("UserCard component", () => {
     });
 
     expect(wrapper.html()).toContain("Delete");
+
+    const editButton = wrapper.find("#modifyUser");
+
+    await editButton.trigger("click");
+
+    expect(wrapper.html()).toContain("Cancel");
+  });
+  test("If user is Admin and card displays his information he should not see delete button", async () => {
+    useAuthStore().user = { ...mockedUser, role: "admin" };
+    const wrapper = mount(UserCard, {
+      props: {
+        user: { ...mockedUser },
+      },
+    });
+
+    expect(wrapper.html()).not.toContain("Delete");
 
     const editButton = wrapper.find("#modifyUser");
 
@@ -246,13 +262,14 @@ describe("UserCard component", () => {
     expect(nameInputField.element.value).toBe(mockedUser.name);
     expect(emailInputField.element.value).toBe(mockedUser.email);
   });
-  test("If user is admin, clicking on delete should send a request to the API and remove the user from the store", async () => {
-    useAuthStore().user = { ...mockedUser, role: "admin" };
+  test("If user is admin, clicking on delete should make the component emit delete-user", async () => {
+    useAuthStore().user = { ...mockedUser, id: "different", role: "admin" };
     useAdministrationStore().users = [mockedUser];
+    /*
     globalThis.fetch = vi
       .fn()
       .mockResolvedValue(createFetchResponse({ message: "User deleted" }));
-
+    */
     const wrapper = mount(UserCard, {
       props: {
         user: mockedUser,
@@ -263,6 +280,8 @@ describe("UserCard component", () => {
 
     await deleteButton.trigger("click");
 
+    expect(wrapper.emitted()).toHaveProperty("delete-user");
+    /*
     expect(fetch).toHaveBeenCalledWith(
       `http://localhost:8080/v1/administration/users/${mockedUser.id}`,
       {
@@ -278,6 +297,7 @@ describe("UserCard component", () => {
     await new Promise((r) => setTimeout(r, 100));
 
     expect(useAdministrationStore().users).toEqual([]);
+    */
   });
   test("Only admin users should see the option to change roles, if the user in the card is not the admin", async () => {
     useAuthStore().user = { ...mockedUser, role: "admin" };
@@ -328,7 +348,8 @@ describe("UserCard component", () => {
     globalThis.fetch = vi.fn().mockResolvedValue(
       createFetchResponse({
         user: { ...mockedUser, role: "admin" },
-      }));
+      })
+    );
 
     const wrapper = mount(UserCard, {
       props: {

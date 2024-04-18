@@ -70,6 +70,15 @@ export const useAuthStore = defineStore("auth", {
         (id: string) => id !== trailId
       );
     },
+    async deleteUserAccount() {
+      const response = await administrationService.deleteUser(
+        this.user.id,
+        this.authToken
+      );
+      if (response.message) {
+        this.logout();
+      }
+    },
   },
   persist: {
     enabled: true,

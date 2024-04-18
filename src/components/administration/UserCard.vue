@@ -33,10 +33,10 @@
         >{{ isEditing ? "Save" : "Edit" }}</BaseButton
       >
       <BaseButton
-        v-if="isEditing || isAdmin"
+        v-if="isEditing || (isAdmin && modelValue.id !== loggedInUser.id)"
         id="cancelDeleteButton"
         secondary
-        @click="isEditing ? cancelEdit() : deleteUser()"
+        @click="isEditing ? cancelEdit() : emit('delete-user')"
         >{{ isEditing ? "Cancel" : "Delete" }}</BaseButton
       >
     </div>
@@ -54,6 +54,10 @@ import { ref, computed } from "vue";
 
 const props = defineProps<{
   user: User;
+}>();
+
+const emit = defineEmits<{
+  "delete-user": [void];
 }>();
 
 const authStore = useAuthStore();
@@ -75,19 +79,13 @@ function cancelEdit() {
 async function updateUser() {
   isLoading.value = true;
   const newUser =
-    loggedInUser.value?.id === modelValue.value?.id 
+    loggedInUser.value?.id === modelValue.value?.id
       ? await authStore.updateUser(modelValue.value)
       : await administrationStore.updateUser(modelValue.value);
   if (newUser) {
     originalUser.value = { ...newUser } as User;
   }
   isEditing.value = false;
-  isLoading.value = false;
-}
-
-async function deleteUser() {
-  isLoading.value = true;
-  await administrationStore.deleteUser(modelValue.value.id);
   isLoading.value = false;
 }
 </script>
