@@ -15,8 +15,13 @@
             @delete-user="openDeleteModal(user)"
         /></template>
       </template>
+      <BaseButton
+        class="mt-4"
+        id="delete-account"
+        @click="openDeleteModal(user)"
+        >Delete Account</BaseButton
+      >
     </div>
-    <BaseButton id="delete-account" @click="openDeleteModal(user)">Delete Account</BaseButton>
   </PageLayout>
   <BaseModal
     id="delete-user-modal"
@@ -40,6 +45,7 @@ import { User } from "../models/user-model";
 import { useAuthStore } from "../stores/auth-store";
 import { useAdministrationStore } from "../stores/administration-store";
 import { computed, onMounted, ref } from "vue";
+import router from "../routing/router";
 
 const authStore = useAuthStore();
 const administrationStore = useAdministrationStore();
@@ -64,9 +70,12 @@ function openDeleteModal(userToBeDeleted: User) {
 
 async function deleteUser() {
   isLoading.value = true;
-  userToDelete.value?.id === user.value.id
-    ? await authStore.deleteUserAccount()
-    : await administrationStore.deleteUser(userToDelete.value?.id);
+  if (userToDelete.value?.id === user.value.id) {
+    await authStore.deleteUserAccount();
+    router.push("/");
+    return;
+  }
+  await administrationStore.deleteUser(userToDelete.value?.id);
   isModalOpen.value = false;
   isLoading.value = false;
 }
