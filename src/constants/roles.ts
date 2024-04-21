@@ -1,3 +1,3 @@
-const roleOptions = ["user", "admin", "guide"];
+const roleOptions = ["user", "guide", "admin"];
 
 export default roleOptions;

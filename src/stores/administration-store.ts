@@ -1,11 +1,14 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth-store";
 import { User } from "../models/user-model";
+import { AdminRequest } from "../models/admin-request";
 import administrationService from "../services/administration-service";
+import adminRequestService from "../services/admin-request-service";
 
 export const useAdministrationStore = defineStore("administration", {
   state: () => ({
     users: [] as User[],
+    adminRequests: [] as AdminRequest[],
   }),
   actions: {
     async getUsers(): Promise<User[] | { message: string }> {
@@ -40,8 +43,35 @@ export const useAdministrationStore = defineStore("administration", {
         this.users = this.users?.filter((u: User) => u.id !== id);
       }
     },
+    async getAdminRequests(): Promise<AdminRequest[] | { message: string }> {
+      const response = await adminRequestService.getAdminRequests(
+        useAuthStore().authToken
+      );
+      if (response) {
+        this.adminRequests = response;
+      }
+      return response;
+    },
+    async respondToAdminRequest(adminRequest: AdminRequest, accepted: boolean) {
+      const response = await adminRequestService.respondToAdminRequest(
+        adminRequest.id,
+        accepted,
+        useAuthStore().authToken
+      );
+      if (response) {
+        this.adminRequests = this.adminRequests?.filter(
+          (r: AdminRequest) => r.id !== adminRequest.id
+        );
+        if (response.accepted) {
+          this.users = this.users.filter(
+            (u: User) => u.id !== adminRequest.user.id
+          );
+        }
+      }
+    },
     cleanStore() {
       this.users = [];
+      this.adminRequests = [];
     },
   },
   persist: {

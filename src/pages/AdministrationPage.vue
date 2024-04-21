@@ -82,7 +82,11 @@ async function deleteUser() {
 
 onMounted(async () => {
   isAdmin.value
-    ? await Promise.all([administrationStore.getUsers(), authStore.getUser()])
+    ? await Promise.all([
+        administrationStore.getUsers(),
+        authStore.getUser(),
+        administrationStore.getAdminRequests(),
+      ])
     : await authStore.getUser();
   isLoading.value = false;
 });

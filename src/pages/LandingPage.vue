@@ -33,9 +33,11 @@ import monitorAccount from "../assets/icons/monitor-account.svg";
 import crossHairGps from "../assets/icons/crosshairs-gps.svg";
 import mapIcon from "../assets/icons/map.svg";
 import { useAuthStore } from "../stores/auth-store";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
 const authStore = useAuthStore();
 
 const user = computed(() => authStore.user);
+
+onMounted(() => authStore.getUser());
 </script>
