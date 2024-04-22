@@ -72,6 +72,7 @@ describe("AdministrationPage", () => {
       useAuthStore().user = mockedAdmin;
       useAuthStore().authToken = "token";
     });
+    useAdministrationStore().getAdminRequests = vi.fn().mockResolvedValue(() => {});
 
     const page = mount(AdministrationPage, { attachTo: document.body });
 

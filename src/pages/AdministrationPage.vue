@@ -6,6 +6,11 @@
         <h2 class="text-2xl">Account Settings</h2>
         <UserCard :user="user" />
         <template v-if="isAdmin">
+          <h2 class="text-2xl">Administration Requests</h2>
+          <AdminRequestCard
+            v-for="adminRequest in adminRequests"
+            :key="adminRequest.id"
+            :admin-request="adminRequest" />
           <h2 class="text-2xl">Users</h2>
           <UserCard
             v-for="user in allNonAdminUsers"
@@ -41,11 +46,12 @@ import PageLayout from "../components/shared/PageLayout.vue";
 import UserCard from "../components/administration/UserCard.vue";
 import BaseModal from "../components/shared/BaseModal.vue";
 import BaseButton from "../components/shared/BaseButton.vue";
+import AdminRequestCard from "../components/administration/AdminRequestCard.vue";
 import { User } from "../models/user-model";
 import { useAuthStore } from "../stores/auth-store";
 import { useAdministrationStore } from "../stores/administration-store";
-import { computed, onMounted, ref } from "vue";
 import router from "../routing/router";
+import { computed, onMounted, ref } from "vue";
 
 const authStore = useAuthStore();
 const administrationStore = useAdministrationStore();
@@ -58,6 +64,7 @@ const userToDelete = ref<User | null>(null);
 const user = computed(() => authStore.user as User);
 const allNonAdminUsers = computed(() => administrationStore.users);
 const isAdmin = computed(() => user.value?.role === "admin");
+const adminRequests = computed(() => administrationStore.adminRequests);
 
 function openDeleteModal(userToBeDeleted: User) {
   userToDelete.value = userToBeDeleted;

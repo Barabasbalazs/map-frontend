@@ -1,5 +1,5 @@
 <template>
-  <div class="border-2 border-black rounded-xl p-2 mx-4">
+  <div class="border-2 border-black rounded-xl p-2 mx-4 max-w-md md:w-[28rem]">
     <div class="grid grid-cols-2 gap-2">
       <BaseInput
         v-model="modelValue.email"
