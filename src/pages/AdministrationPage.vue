@@ -6,19 +6,23 @@
         <h2 class="text-2xl">Account Settings</h2>
         <UserCard :user="user" />
         <template v-if="isAdmin">
-          <h2 class="text-2xl">Administration Requests</h2>
-          <AdminRequestCard
-            v-for="adminRequest in adminRequests"
-            :key="adminRequest.id"
-            :admin-request="adminRequest" />
-          <h2 class="text-2xl">Users</h2>
-          <UserCard
-            v-for="user in allNonAdminUsers"
-            :id="`user-${user.id}`"
-            :key="user.id"
-            :user="user"
-            @delete-user="openDeleteModal(user)"
-        /></template>
+          <template v-if="adminRequests.length">
+            <h2 class="text-2xl">Administration Requests</h2>
+            <AdminRequestCard
+              v-for="adminRequest in adminRequests"
+              :key="adminRequest.id"
+              :admin-request="adminRequest"
+            />
+          </template>
+          <template v-if="allUsers.length">
+            <h2 class="text-2xl">Users</h2>
+            <UserCard
+              v-for="user in allUsers"
+              :id="`user-${user.id}`"
+              :key="user.id"
+              :user="user"
+              @delete-user="openDeleteModal(user)" /></template
+        ></template>
       </template>
       <BaseButton
         class="mt-4"
@@ -62,7 +66,7 @@ const modalText = ref("");
 const userToDelete = ref<User | null>(null);
 
 const user = computed(() => authStore.user as User);
-const allNonAdminUsers = computed(() => administrationStore.users);
+const allUsers = computed(() => administrationStore.users);
 const isAdmin = computed(() => user.value?.role === "admin");
 const adminRequests = computed(() => administrationStore.adminRequests);
 

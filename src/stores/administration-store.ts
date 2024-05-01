@@ -25,13 +25,11 @@ export const useAdministrationStore = defineStore("administration", {
         user,
         useAuthStore().authToken
       );
-      if (response && response.role === "admin") {
-        this.users = this.users?.filter((u: User) => u.id !== response.id);
-      } else if (response) {
-        this.users = this.users?.map((u: User) =>
-          u.id === response.id ? response : u
-        );
-      }
+
+      this.users = this.users?.map((u: User) =>
+        u.id === response.id ? response : u
+      );
+
       return response;
     },
     async deleteUser(id: string): Promise<void> {
@@ -63,9 +61,12 @@ export const useAdministrationStore = defineStore("administration", {
           (r: AdminRequest) => r.id !== adminRequest.id
         );
         if (response.accepted) {
-          this.users = this.users.filter(
-            (u: User) => u.id !== adminRequest.user.id
-          );
+          this.users = this.users.map((u: User) => {
+            if (u.id === adminRequest.user?.id) {
+              u.role = "admin";
+            }
+            return u;
+          });
         }
       }
     },

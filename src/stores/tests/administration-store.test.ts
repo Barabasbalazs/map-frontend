@@ -44,7 +44,7 @@ describe("Administration Store", () => {
       }
     );
 
-    expect(useAdministrationStore().users).toEqual([]);
+    expect(useAdministrationStore().users).toEqual([{ ...userCredentials, role: "admin" }]);
   });
 
   test("Respond to admin request should call correct endpoint with correct payload, and remove user if accepted", async () => {
@@ -77,7 +77,7 @@ describe("Administration Store", () => {
       }
     );
 
-    expect(useAdministrationStore().users).toEqual([]);
+    expect(useAdministrationStore().users).toEqual([{ ...userCredentials, role: "admin" }]);
     expect(useAdministrationStore().adminRequests).toEqual([]);
   });
   test("Get admin requests should call correct endpoint and set the data into the store", async () => {
