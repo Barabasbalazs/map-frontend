@@ -10,7 +10,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   { path: "/", name: "Landing Page", component: LandingPage },
-  { path: "/tracking", name: "Tracking Page", component: TrackingPage },
+  { path: "/tracking/:id", name: "Tracking Page", component: TrackingPage },
   { path: "/simulator", name: "Simulator Page", component: SimulatorPage },
   { path: "/login", name: "Login Page", component: LoginPage },
   { path: "/trails", name: "Trails Page", component: GeneralTrailsPage },

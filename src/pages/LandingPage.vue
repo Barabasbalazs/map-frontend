@@ -7,12 +7,6 @@
         </div>
         <p>View Trails</p>
       </router-link>
-      <router-link v-if="user?.role !== 'user'" to="/tracking" id="tracking" class="flex items-center gap-4">
-        <div class="flex items-center justify-center pr-3">
-          <img class="w-8 h-8" :src="crossHairGps" alt="crossHairGps" />
-        </div>
-        <p>Track Users</p>
-      </router-link>
       <router-link
         to="/simulator"
         id="simulator"
@@ -30,14 +24,11 @@
 <script setup lang="ts">
 import PageLayout from "../components/shared/PageLayout.vue";
 import monitorAccount from "../assets/icons/monitor-account.svg";
-import crossHairGps from "../assets/icons/crosshairs-gps.svg";
 import mapIcon from "../assets/icons/map.svg";
 import { useAuthStore } from "../stores/auth-store";
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 
 const authStore = useAuthStore();
-
-const user = computed(() => authStore.user);
 
 onMounted(() => authStore.getUser());
 </script>

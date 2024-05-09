@@ -9,6 +9,7 @@ export const useTrailsStore = defineStore("trails", {
     trails: [] as Trail[],
     subscribedTrails: [] as Trail[],
     createdTrails: [] as Trail[],
+    trail: {} as Trail,
   }),
   actions: {
     async getTrails(params: RequestParameters): Promise<Trail[] | void> {
@@ -81,11 +82,6 @@ export const useTrailsStore = defineStore("trails", {
       }
       return response;
     },
-    cleanStore() {
-      this.trails = [];
-      this.subscribedTrails = [];
-      this.createdTrails = [];
-    },
     async subscribeToTrail(trailId: string): Promise<Trail | void> {
       const response = await trailsService.subscribeToTrail(
         trailId,
@@ -109,6 +105,22 @@ export const useTrailsStore = defineStore("trails", {
         );
       }
       return response;
+    },
+    async getTrail(trailId: string): Promise<Trail | void> {
+      const response = await trailsService.getTrail(
+        trailId,
+        useAuthStore().authToken
+      );
+      if (response) {
+        this.trail = response;
+      }
+      return response;
+    },
+    cleanStore() {
+      this.trails = [];
+      this.subscribedTrails = [];
+      this.createdTrails = [];
+      this.trail = {} as Trail;
     },
   },
   persist: {

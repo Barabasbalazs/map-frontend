@@ -26,7 +26,7 @@ describe("Auth based rerouting tests", () => {
     const authStore = useAuthStore();
     authStore.authToken = "";
 
-    localRouter.push("/tracking");
+    localRouter.push("/tracking/123");
     await localRouter.isReady();
 
     mount(AppVue, {
@@ -34,8 +34,6 @@ describe("Auth based rerouting tests", () => {
         plugins: [localRouter],
       },
     });
-
-    console.log(localRouter.currentRoute.value.path);
 
     expect(localRouter.currentRoute.value.path).toBe("/login");
   });

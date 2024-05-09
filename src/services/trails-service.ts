@@ -29,6 +29,13 @@ const trailsService = {
     });
     return await parseResponse(resp);
   },
+  getTrail: async (trailId: string, authToken: string) => {
+    const resp = await request.get({
+      url: `${trailsUrl}/${trailId}`,
+      authToken,
+    });
+    return await parseResponse(resp);
+  },
   updateTrail: async (
     trail: Trail,
     authToken: string

@@ -33,8 +33,6 @@ describe("LandinPage auth level tests", () => {
       },
     });
 
-    const trackingLink = wrapper.find("#tracking");
-    expect(trackingLink.exists()).toBe(true);
     const simulatorLink = wrapper.find("#simulator");
     expect(simulatorLink.exists()).toBe(true);
     const trailsLink = wrapper.find("#trails");
