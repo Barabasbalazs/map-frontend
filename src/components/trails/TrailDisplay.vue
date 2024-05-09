@@ -55,7 +55,9 @@
       v-else-if="editMode"
       class="flex items-center justify-center gap-2 pt-5 pb-2"
     >
-      <BaseButton id="save" :disabled="isLoading" @click="sendTrail">Save</BaseButton>
+      <BaseButton id="save" :disabled="isLoading" @click="sendTrail"
+        >Save</BaseButton
+      >
       <BaseButton
         id="cancel"
         :disabled="isLoading"
@@ -114,10 +116,8 @@ const localTrail = ref({ ...props.trail });
 const isSubscribed = computed(() =>
   props.user?.trails?.includes(props.trail._id)
 );
-const isCreator = computed(
-  () => props.user?.id === props.trail?.creator?.id
-);
-
+const isCreator = computed(() => props.user?.id === props.trail?.creator?.id);
+/*
 function maxAbsoluteCoordinate(coordinates: number[]): number {
   return Math.max(...coordinates.map((coordinate) => Math.abs(coordinate)));
 }
@@ -138,6 +138,7 @@ const meanCoordinates = computed(() => {
     lng: maxAbsoluteCoordinate(longitudes),
   };
 });
+*/
 
 function initMap(trail: Trail) {
   if (mapContainer.value) {
@@ -146,8 +147,12 @@ function initMap(trail: Trail) {
       leafletService.initializeMap(
         mapContainer,
         {
-          lat: trail.path.length ? meanCoordinates.value.lat : 51.505,
-          lng: trail.path.length ? meanCoordinates.value.lng : -0.09,
+          lat: trail.path.length
+            ? localTrail.value?.path?.[0]?.coordinates?.lat
+            : 51.505,
+          lng: trail.path.length
+            ? localTrail.value?.path?.[0]?.coordinates?.lng
+            : -0.09,
         },
         editMode.value,
         trail.path
@@ -156,8 +161,12 @@ function initMap(trail: Trail) {
       leafletService = new LeafletService(
         mapContainer,
         {
-          lat: trail.path.length ? meanCoordinates.value.lat : 51.505,
-          lng: trail.path.length ? meanCoordinates.value.lng : -0.09,
+          lat: trail.path.length
+            ? localTrail.value?.path?.[0]?.coordinates?.lat
+            : 51.505,
+          lng: trail.path.length
+            ? localTrail.value?.path?.[0]?.coordinates?.lng
+            : -0.09,
         },
         editMode.value,
         trail.path
@@ -172,7 +181,7 @@ function handleEdit() {
 
 function cancelEdit() {
   if (props.isCreating) {
-    emit("delete", '0');
+    emit("delete", "0");
     return;
   }
   localTrail.value = { ...originalTrail.value };
@@ -201,8 +210,13 @@ async function addPathPoint() {
     .get((lastIndex - 1).toString())._latlng;
 
   if (
-    localTrail.value.path.find((point) => point.coordinates.lat === coordinates.lat && point.coordinates.lng === coordinates.lng)
-  ) return;
+    localTrail.value.path.find(
+      (point) =>
+        point.coordinates.lat === coordinates.lat &&
+        point.coordinates.lng === coordinates.lng
+    )
+  )
+    return;
 
   localTrail.value = {
     ...localTrail.value,

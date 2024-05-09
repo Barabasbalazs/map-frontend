@@ -2,8 +2,28 @@ import MapComponent from "../TrackingMapComponent.vue";
 import BaseModal from "../../shared/BaseModal.vue";
 import { Router, createRouter, createWebHistory } from "vue-router";
 import router from "../../../routing/router";
+import { setActivePinia, createPinia } from "pinia";
+import { useTrailsStore } from "../../../stores/trails-store";
 import { mount, enableAutoUnmount, flushPromises } from "@vue/test-utils";
 import { expect, test, describe, afterEach, beforeEach } from "vitest";
+
+const mockedTrail = {
+  id: "1",
+  name: "Test trail",
+  location: "Test location",
+  path: [
+    {
+      name: "Test path",
+      coordinates: { lat: 1, lng: 1 },
+    },
+  ],
+  creator: {
+    id: "1",
+    email: "creator@mail.com",
+    role: "guide",
+    name: "Creator",
+  },
+};
 
 enableAutoUnmount(afterEach);
 
@@ -13,80 +33,80 @@ beforeEach(async () => {
     history: createWebHistory(),
     routes: router.options.routes,
   });
+  setActivePinia(createPinia());
+  useTrailsStore().trail = mockedTrail;
 });
 
 describe("MapComponent no connection tests", () => {
-    
-   test("When no connection is established, an Error modal is shown after 1 second", async () => {
-        const wrapper = mount(MapComponent);
-        await flushPromises();
+  test("When no connection is established, an Error modal is shown after 1 second", async () => {
+    const wrapper = mount(MapComponent);
+    await flushPromises();
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
-        expect(wrapper.findComponent(BaseModal).props("isOpen")).toBe(true);
+    expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
+    expect(wrapper.findComponent(BaseModal).props("isOpen")).toBe(true);
 
-        const modal = wrapper.findComponent(BaseModal);
+    const modal = wrapper.findComponent(BaseModal);
 
-        const title = modal.find("#modal-title");
+    const title = modal.find("#modal-title");
 
-        expect(title.text()).toBe("Error");
-   })
-   
-   test("The no connection error modal triggers a retry and on fail opens again", async () => {
-        const wrapper = mount(MapComponent);
-        await flushPromises();
+    expect(title.text()).toBe("Error");
+  });
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+  test("The no connection error modal triggers a retry and on fail opens again", async () => {
+    const wrapper = mount(MapComponent);
+    await flushPromises();
 
-        expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const modal = wrapper.findComponent(BaseModal);
+    expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
 
-        const title = modal.find("#modal-title");
+    const modal = wrapper.findComponent(BaseModal);
 
-        expect(title.text()).toBe("Error");
+    const title = modal.find("#modal-title");
 
-        const retryButton = modal.find("#modal-cancel-button");
+    expect(title.text()).toBe("Error");
 
-        await retryButton.trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+    const retryButton = modal.find("#modal-cancel-button");
 
-        expect(wrapper.findComponent(BaseModal).props("isOpen")).toBe(false);
+    await retryButton.trigger("click");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+    expect(wrapper.findComponent(BaseModal).props("isOpen")).toBe(false);
 
-        await flushPromises();
-        expect(wrapper.findComponent(BaseModal).props("isOpen")).toBe(true);
-        expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
-   })
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-   test("The no connection modal return button triggers a return to the previous page", async () => {
+    await flushPromises();
+    expect(wrapper.findComponent(BaseModal).props("isOpen")).toBe(true);
+    expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
+  });
 
-        localRouter.push("/");
+  test("The no connection modal return button triggers a return to the previous page", async () => {
+    localRouter.push("/");
 
-        await localRouter.isReady();
+    await localRouter.isReady();
 
-        localRouter.push("/tracking");
+    localRouter.push("/tracking");
 
-        const wrapper = mount(MapComponent);
-        await flushPromises();
+    const wrapper = mount(MapComponent);
+    await flushPromises();
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
+    expect(wrapper.findComponent(BaseModal).exists()).toBe(true);
 
-        const modal = wrapper.findComponent(BaseModal);
+    const modal = wrapper.findComponent(BaseModal);
 
-        const title = modal.find("#modal-title");
+    const title = modal.find("#modal-title");
 
-        expect(title.text()).toBe("Error");
+    expect(title.text()).toBe("Error");
 
-        const returnButton = modal.find("#modal-confirmation-button");
+    const returnButton = modal.find("#modal-confirmation-button");
 
-        await returnButton.trigger("click");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+    await returnButton.trigger("click");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        expect(router.currentRoute.value.path).toBe("/");
-   })
+    expect(router.currentRoute.value.path).toBe("/");
+  });
 });
