@@ -43,8 +43,8 @@ async function authenticate(value: Partial<User>, login = true) {
   const response = login
     ? await authStore.login(value)
     : await authStore.register(value);
-  if (response.hasOwnProperty("message") && "message" in response) {
-    apiError.value = response.message;
+  if (!response) {
+    apiError.value = "Invalid credentials";
     isLoading.value = false;
     return;
   }
