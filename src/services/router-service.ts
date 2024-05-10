@@ -1,7 +1,7 @@
 import { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { useAuthStore } from "../stores/auth-store";
 
-const userRestrictedRoutes = ["/tracking", "/my-trails"];
+const userRestrictedRoutes = ["Tracking Page", "My Trails Page"];
 
 const redirectService = {
   beforeEach: (
@@ -23,7 +23,14 @@ const redirectService = {
       return next("/");
     }
 
-    if (authStore.user.role === "user" && userRestrictedRoutes.includes(to.path)) {
+    if (
+      authStore.user.role === "user" &&
+      userRestrictedRoutes.includes(to.name.toString())
+    ) {
+      return next("/");
+    }
+
+    if (authStore.user.role === "guide" && to.name === "Simulator Page") {
       return next("/");
     }
 

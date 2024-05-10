@@ -39,40 +39,54 @@
       </div>
     </template>
 
-    <div
-      v-if="props.user?.role === 'user'"
-      class="flex items-center justify-center gap-2 pt-5 pb-2"
-    >
-      <BaseButton
-        id="subscribe"
-        :secondary="isSubscribed"
-        @click="handleSubscribe"
-        :disabled="isLoading"
-        >{{ isSubscribed ? "Unsubscribe" : "Subscribe" }}</BaseButton
+    <div class="flex items-center justify-center gap-2 pt-5 pb-2">
+      <template v-if="props.user?.role === 'user'">
+        <BaseButton
+          id="subscribe"
+          :secondary="isSubscribed"
+          @click="handleSubscribe"
+          :disabled="isLoading"
+          >{{ isSubscribed ? "Unsubscribe" : "Subscribe" }}</BaseButton
+        ></template
       >
+      <template v-else-if="editMode">
+        <BaseButton id="save" :disabled="isLoading" @click="sendTrail"
+          >Save</BaseButton
+        >
+        <BaseButton
+          id="cancel"
+          :disabled="isLoading"
+          secondary
+          @click="cancelEdit"
+          >Cancel</BaseButton
+        ></template
+      >
+      <template v-else-if="isCreator"
+        ><BaseButton id="edit" @click="handleEdit">Edit</BaseButton>
+        <BaseButton id="delete" @click="handleDelete" secondary
+          >Delete</BaseButton
+        >
+      </template>
     </div>
-    <div
-      v-else-if="editMode"
-      class="flex items-center justify-center gap-2 pt-5 pb-2"
-    >
-      <BaseButton id="save" :disabled="isLoading" @click="sendTrail"
-        >Save</BaseButton
-      >
-      <BaseButton
-        id="cancel"
-        :disabled="isLoading"
-        secondary
-        @click="cancelEdit"
-        >Cancel</BaseButton
-      >
-    </div>
-    <div
-      v-else-if="isCreator"
-      class="flex items-center justify-center gap-2 pt-5 pb-2"
-    >
-      <BaseButton id="edit" @click="handleEdit">Edit</BaseButton>
-      <BaseButton id="delete" @click="handleDelete" secondary
-        >Delete</BaseButton
+    <div class="flex justify-center">
+      <template v-if="props.user?.role === 'user' && isSubscribed"
+        ><BaseButton
+          secondary
+          :id="`simulator-${props.trail?.id || props.trail?._id}`"
+          ><router-link
+            :to="`/simulator/${props.trail?.id || props.trail?._id}`"
+            >Simulate Hike</router-link
+          ></BaseButton
+        >
+      </template>
+      <template v-else-if="isCreator"
+        ><BaseButton
+          secondary
+          :id="`tracking-${props.trail?.id || props.trail?._id}`"
+          ><router-link :to="`/tracking/${props.trail?.id || props.trail?._id}`"
+            >Track Users</router-link
+          ></BaseButton
+        ></template
       >
     </div>
   </div>
@@ -110,7 +124,6 @@ const editMode = ref(props.editable);
 const originalTrail = ref({
   ...trailsStore.trails.find((trail) => trail._id === props.trail._id),
 });
-
 const localTrail = ref({ ...props.trail });
 
 const isSubscribed = computed(() =>

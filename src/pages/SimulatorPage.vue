@@ -1,4 +1,5 @@
 <template>
+  <LoadingAnimation v-if="isLoading" />
   <PageLayout title="Balázs's Map App Simulator">
     <div class="flex flex-col items-center h-full w-full px-5 md:w-1/3 gap-6">
       <h2>
@@ -24,11 +25,15 @@
 
 <script setup lang="ts">
 import PathDisplay from "../components/simulator/PathDisplay.vue";
+import LoadingAnimation from "../components/shared/LoadingAnimation.vue";
 import SimulationInput from "../components/simulator/SimulationInput.vue";
 import PageLayout from "../components/shared/PageLayout.vue";
 import { UserWithParameters } from "../types/user-parameters";
 import { generateRandomizedPath } from "../utils/path-generator";
+import { usePermissionRerouting } from "../composables/permission-rerouting";
 import { ref } from "vue";
+
+const { isLoading } = usePermissionRerouting();
 
 const path = ref();
 const user = ref();
