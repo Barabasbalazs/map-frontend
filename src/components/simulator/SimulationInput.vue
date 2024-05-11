@@ -21,15 +21,7 @@
     </div>
     <div class="flex flex-col gap-3 w-full">
       <h3 class="text-lg">Route specifications</h3>
-      <div class="grid grid-cols-2 gap-4">
-        <BaseInput
-          v-model="model.parameters.distance"
-          id="distance"
-          label="Total distance"
-          type="number"
-          tooltip="Km"
-          :error="errors.distance"
-        />
+      <div class="flex justify-center">
         <BaseInput
           v-model="model.parameters.speed"
           id="speed"
@@ -67,7 +59,6 @@ const errors = ref({
   name: "",
   lat: "",
   lng: "",
-  distance: "",
   speed: "",
 });
 
@@ -77,7 +68,6 @@ async function validateModel() {
     name: "",
     lat: "",
     lng: "",
-    distance: "",
     speed: "",
   };
   try {

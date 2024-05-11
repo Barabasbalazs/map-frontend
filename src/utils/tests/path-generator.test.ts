@@ -1,4 +1,4 @@
-import { generateRandomizedPath } from "../path-generator";
+import { generateRandomizedPath } from "../random-path-generator";
 import { Coordinates } from "../../types/coordinates";
 import { expect, test, describe } from "vitest";
 

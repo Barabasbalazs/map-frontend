@@ -13,7 +13,7 @@
       />
       <PathDisplay
         v-else-if="path && isBroadcasting"
-        :trail-id="trailId"
+        :trail-id="trail?.id"
         :path="path"
         :user="user"
         @finished-broadcast="isBroadcasting = false"
@@ -30,7 +30,7 @@ import LoadingAnimation from "../components/shared/LoadingAnimation.vue";
 import SimulationInput from "../components/simulator/SimulationInput.vue";
 import PageLayout from "../components/shared/PageLayout.vue";
 import { UserWithParameters } from "../types/user-parameters";
-import { generateRandomizedPath } from "../utils/path-generator";
+import { generatePath } from "../utils/path-generator";
 import { usePermissionRerouting } from "../composables/permission-rerouting";
 import { useTrailsStore } from "../stores/trails-store";
 import { useAuthStore } from "../stores/auth-store";
@@ -55,20 +55,19 @@ const userWithParametersModel = ref({
     },
   },
   parameters: {
-    distance: undefined,
     speed: undefined,
   },
 });
 
-const trailId = computed(() => trailsStore.trail?.id);
+const trail = computed(() => trailsStore.trail);
 
 function createPath(generatedData: UserWithParameters) {
-  path.value = generateRandomizedPath(
-    generatedData.user.coords,
-    generatedData.parameters.distance,
-    generatedData.parameters.speed
+  path.value = generatePath(
+    trail.value?.path?.map((point) => point.coordinates),
+    userWithParametersModel.value?.parameters?.speed
   );
   user.value = generatedData.user;
   isBroadcasting.value = true;
 }
 </script>
+../utils/random-path-generator

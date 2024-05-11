@@ -1,7 +1,7 @@
 import { User } from "../models/user-model";
 
 export type PathParameters = {
-    distance: number;
+    distance?: number;
     speed: number;
 };
 

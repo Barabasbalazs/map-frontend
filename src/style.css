@@ -3,80 +3,90 @@
 @tailwind utilities;
 
 html * {
-    font-family: 'Futura';
+  font-family: "Futura";
 }
 
-.marker-popup {
-
+.user-marker {
+  filter: hue-rotate(270deg);
 }
 
 /*zoom button styling*/
-.control-zoom  {
-    border: none !important;
-    width: 50px !important;
-    height: 80px !important;
+.control-zoom {
+  border: none !important;
+  width: 50px !important;
+  height: 80px !important;
 }
 
 /*zoom in button*/
 .control-zoom > a {
-    border: 2px solid #000000 !important;
-    width: 100% !important;
-    height: 50% !important;
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
+  border: 2px solid #000000 !important;
+  width: 100% !important;
+  height: 50% !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
 }
 
 .control-zoom > a:first-child {
-    border-radius: 12px 12px 0px 0px !important;
-    border-bottom: none !important;
+  border-radius: 12px 12px 0px 0px !important;
+  border-bottom: none !important;
 }
 
 .control-zoom > a:last-child {
-    border-radius: 0px 0px 12px 12px !important;
-    border-top: none !important;
+  border-radius: 0px 0px 12px 12px !important;
+  border-top: none !important;
 }
 
 .control-zoom > a > span {
-    font-size: 30px !important;
+  font-size: 30px !important;
 }
 
 /*tile layer control*/
 .control-layer {
-    border: 2px solid #000000 !important;
-    border-radius: 12px !important;
+  border: 2px solid #000000 !important;
+  border-radius: 12px !important;
 }
 
 /*the layer image*/
 .control-layer .leaflet-control-layers-toggle {
-    background-image: url('./assets/icons/layers-triple.svg') !important;
-    background-size: 44px 44px !important;
-    width: 80px !important;
-    height: 80px !important;
+  background-image: url("./assets/icons/layers-triple.svg") !important;
+  background-size: 44px 44px !important;
+  width: 80px !important;
+  height: 80px !important;
 }
 
 /* the whole control div when opened */
 .control-layer .leaflet-control-layers-list .leaflet-control-layers-base {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* radio button and label positioning*/
-.control-layer .leaflet-control-layers-list .leaflet-control-layers-base > label > span {
-    display: flex;
-    gap: 8px;
+.control-layer
+  .leaflet-control-layers-list
+  .leaflet-control-layers-base
+  > label
+  > span {
+  display: flex;
+  gap: 8px;
 }
 
 /* the selecting radio button */
-.control-layer .leaflet-control-layers-list .leaflet-control-layers-base .leaflet-control-layers-selector  {
-    top: 0 !important;
-    margin-top: 0px !important;
-    cursor: pointer !important;
+.control-layer
+  .leaflet-control-layers-list
+  .leaflet-control-layers-base
+  .leaflet-control-layers-selector {
+  top: 0 !important;
+  margin-top: 0px !important;
+  cursor: pointer !important;
 }
 
 /* the label of the radio button */
-.control-layer .leaflet-control-layers-list .leaflet-control-layers-base > label {
-    cursor: pointer !important;
-    font-size: 16px !important;
+.control-layer
+  .leaflet-control-layers-list
+  .leaflet-control-layers-base
+  > label {
+  cursor: pointer !important;
+  font-size: 16px !important;
 }

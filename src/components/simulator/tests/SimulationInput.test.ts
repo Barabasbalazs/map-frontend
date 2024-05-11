@@ -19,7 +19,6 @@ const emptyProps = {
       email: "test@mail.com",
     },
     parameters: {
-      distance: 0,
       speed: 0,
     },
   } as UserWithParameters,
@@ -37,7 +36,6 @@ const baseProps = {
       email: "test@mail2.com",
     },
     parameters: {
-      distance: 10,
       speed: 1,
     },
   } as UserWithParameters,
@@ -65,7 +63,6 @@ describe("SimulationInput mounting tests", () => {
 });
 
 describe("SimulationInput input validation tests", () => {
-
   test("SimulationInput renders error on invalid coordinates", async () => {
     const invalidCoordinates = [
       { lat: 91, lng: 0 },
@@ -92,21 +89,6 @@ describe("SimulationInput input validation tests", () => {
       expect(latInput.find("#error")).toBeDefined();
       expect(lngInput.find("#error")).toBeDefined();
     }
-  });
-
-  test("SimulationInput renders error on invalid distance", async () => {
-    const wrapper = mount(SimulationInput, {
-      props: emptyProps,
-    });
-
-    const distanceInput = wrapper.get("#distance").getComponent(BaseInput);
-    const confirmationButton = wrapper.getComponent(BaseButton);
-
-    await distanceInput.setValue(-1);
-
-    await confirmationButton.trigger("click");
-
-    expect(distanceInput.find("#error")).toBeDefined();
   });
 
   test("SimulationInput renders error on invalid speed", async () => {
@@ -152,7 +134,6 @@ describe("SimulationInput input validation tests", () => {
 
     const latInput = wrapper.get("#lat").getComponent(BaseInput);
     const lngInput = wrapper.get("#lng").getComponent(BaseInput);
-    const distanceInput = wrapper.get("#distance").getComponent(BaseInput);
     const speedInput = wrapper.get("#speed").getComponent(BaseInput);
 
     const confirmationButton = wrapper.getComponent(BaseButton);
@@ -168,12 +149,6 @@ describe("SimulationInput input validation tests", () => {
     expect(lngInput.find("#error")).toBeDefined();
 
     lngInput.setValue(0.1);
-
-    await confirmationButton.trigger("click");
-
-    expect(distanceInput.find("#error")).toBeDefined();
-
-    distanceInput.setValue(10);
 
     await confirmationButton.trigger("click");
 
@@ -193,7 +168,7 @@ describe("SimulationInput correct input tests", () => {
 
     expect(wrapper.emitted()).toHaveProperty("update:modelValue");
   });
-  
+
   test("SimulationInput emits update:modelValue upon entering of valid input", async () => {
     const wrapper = mount(SimulationInput, {
       props: emptyProps,
@@ -201,7 +176,6 @@ describe("SimulationInput correct input tests", () => {
 
     const latInput = wrapper.get("#lat").getComponent(BaseInput);
     const lngInput = wrapper.get("#lng").getComponent(BaseInput);
-    const distanceInput = wrapper.get("#distance").getComponent(BaseInput);
     const speedInput = wrapper.get("#speed").getComponent(BaseInput);
 
     const confirmationButton = wrapper.getComponent(BaseButton);
@@ -212,7 +186,6 @@ describe("SimulationInput correct input tests", () => {
 
     await latInput.setValue(51.507);
     await lngInput.setValue(0.1);
-    await distanceInput.setValue(10);
     await speedInput.setValue(1);
 
     await confirmationButton.trigger("click");

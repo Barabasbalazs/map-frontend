@@ -101,7 +101,6 @@ describe("Parameters validator tests", () => {
           email: "test@mail.com"
         },
         parameters: {
-          distance: 1,
           speed: 1,
         },
       });

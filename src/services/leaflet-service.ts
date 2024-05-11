@@ -78,7 +78,12 @@ class LeafletService {
     this.#mapInstance.value.remove();
   }
 
-  #addDisplayMarker(id: string, coords: Coordinates, popupContent: string) {
+  #addDisplayMarker(
+    id: string,
+    coords: Coordinates,
+    popupContent: string,
+    isColored = false
+  ) {
     const icon = L.icon({
       iconUrl: markerIcon,
       iconSize: [25, 41],
@@ -89,13 +94,14 @@ class LeafletService {
         offset: [0, -7],
         className: "marker-popup",
       });
+    if (isColored) (marker as any)._icon.classList.add("user-marker");
     this.#markerMapping.set(id, marker);
   }
 
   public addUserMarker(user: User) {
     const { coords } = user;
     if (!coords) return;
-    this.#addDisplayMarker(user.name, coords, user.name);
+    this.#addDisplayMarker(user.name, coords, user.name, true);
   }
 
   public updateUserMarkers(users: User[]) {
