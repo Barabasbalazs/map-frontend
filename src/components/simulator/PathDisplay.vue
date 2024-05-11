@@ -35,12 +35,13 @@ import BaseInput from "../shared/BaseInput.vue";
 import BaseModal from "../shared/BaseModal.vue";
 import { User } from "../../models/user-model";
 import { Coordinates } from "../../types/coordinates";
-import { ref, onBeforeUnmount, onMounted } from "vue";
 import { useTransferSimulatedPath } from "../../composables/transfer-simulated-path";
+import { ref, onBeforeUnmount, onMounted } from "vue";
 
 const props = defineProps<{
   path: Coordinates[];
   user: User;
+  trailId: string;
 }>();
 
 const emit = defineEmits<{

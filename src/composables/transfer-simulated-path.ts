@@ -10,6 +10,7 @@ export function useTransferSimulatedPath(
   props: {
     path: Coordinates[];
     user: User;
+    trailId: string;
   },
   emit: {
     (e: "finishedBroadcast"): void;
@@ -40,7 +41,7 @@ export function useTransferSimulatedPath(
     socket.value.on("error", () => {
       isNoConnection.value = true;
       isModalOpen.value = true;
-    })
+    });
   }
 
   function startSendingProcess() {
@@ -61,16 +62,16 @@ export function useTransferSimulatedPath(
     const { pause } = useInterval(interval.value * 1000, {
       callback: () => {
         if (pathOfUser.value.length === 0) {
-            try {
-          socket.value.disconnect();
-            } catch (e) {}
+          try {
+            socket.value.disconnect();
+          } catch (e) {}
           pause();
           emit("finishedBroadcast");
         }
         try {
-          socket.value.emit("update-location", [
+          socket.value.emit(`update-location-${socket.value?.id?.toString()}`, [
             {
-              id: props.user.id,
+              id: props.trailId,
               name: props.user.name,
               coords: pathOfUser.value[0],
             },
@@ -88,6 +89,6 @@ export function useTransferSimulatedPath(
     isBroadcasting,
     startSendingProcess,
     socket,
-    setupSocket
+    setupSocket,
   };
 }

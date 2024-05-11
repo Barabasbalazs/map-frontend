@@ -11,7 +11,7 @@ const emptyProps = {
   modelValue: {
     user: {
       id: "0",
-      name: "",
+      name: "Mandem",
       coords: {
         lat: 0,
         lng: 0,
@@ -65,41 +65,6 @@ describe("SimulationInput mounting tests", () => {
 });
 
 describe("SimulationInput input validation tests", () => {
-  test("SimulationInput renders error on invalid id", async () => {
-    const wrapper = mount(SimulationInput, {
-      props: emptyProps,
-    });
-
-    const idInput = wrapper.get("#id").getComponent(BaseInput);
-    const confirmationButton = wrapper.getComponent(BaseButton);
-
-    await idInput.setValue(-1);
-
-    await confirmationButton.trigger("click");
-
-    expect(idInput.find("#error")).toBeDefined();
-
-    await idInput.setValue(0);
-
-    await confirmationButton.trigger("click");
-
-    expect(idInput.find("#error")).toBeDefined();
-  });
-
-  test("SimulationInput renders error on invalid name", async () => {
-    const wrapper = mount(SimulationInput, {
-      props: emptyProps,
-    });
-
-    const nameInput = wrapper.get("#name").getComponent(BaseInput);
-    const confirmationButton = wrapper.getComponent(BaseButton);
-
-    await nameInput.setValue("");
-
-    await confirmationButton.trigger("click");
-
-    expect(nameInput.find("#error")).toBeDefined();
-  });
 
   test("SimulationInput renders error on invalid coordinates", async () => {
     const invalidCoordinates = [
@@ -185,26 +150,12 @@ describe("SimulationInput input validation tests", () => {
       props: emptyProps,
     });
 
-    const idInput = wrapper.get("#id").getComponent(BaseInput);
-    const nameInput = wrapper.get("#name").getComponent(BaseInput);
     const latInput = wrapper.get("#lat").getComponent(BaseInput);
     const lngInput = wrapper.get("#lng").getComponent(BaseInput);
     const distanceInput = wrapper.get("#distance").getComponent(BaseInput);
     const speedInput = wrapper.get("#speed").getComponent(BaseInput);
 
     const confirmationButton = wrapper.getComponent(BaseButton);
-
-    await confirmationButton.trigger("click");
-
-    expect(idInput.find("#error")).toBeDefined();
-
-    idInput.setValue(1);
-
-    await confirmationButton.trigger("click");
-
-    expect(nameInput.find("#error")).toBeDefined();
-
-    nameInput.setValue("test");
 
     await confirmationButton.trigger("click");
 
@@ -242,13 +193,12 @@ describe("SimulationInput correct input tests", () => {
 
     expect(wrapper.emitted()).toHaveProperty("update:modelValue");
   });
+  
   test("SimulationInput emits update:modelValue upon entering of valid input", async () => {
     const wrapper = mount(SimulationInput, {
       props: emptyProps,
     });
 
-    const idInput = wrapper.get("#id").getComponent(BaseInput);
-    const nameInput = wrapper.get("#name").getComponent(BaseInput);
     const latInput = wrapper.get("#lat").getComponent(BaseInput);
     const lngInput = wrapper.get("#lng").getComponent(BaseInput);
     const distanceInput = wrapper.get("#distance").getComponent(BaseInput);
@@ -256,14 +206,10 @@ describe("SimulationInput correct input tests", () => {
 
     const confirmationButton = wrapper.getComponent(BaseButton);
 
-    confirmationButton.trigger("click");
-
-    expect(idInput.find("#error")).toBeDefined();
+    await confirmationButton.trigger("click");
 
     expect(wrapper.emitted()).not.toHaveProperty("update:modelValue");
 
-    await idInput.setValue(1);
-    await nameInput.setValue("test");
     await latInput.setValue(51.507);
     await lngInput.setValue(0.1);
     await distanceInput.setValue(10);

@@ -12,7 +12,7 @@ class SocketService {
     return this.#isConnectionError;
   }
 
-  public setUpSocket() {
+  public setUpSocket(trailId: string) {
     this.#socket = io(`${configProvider.wsServerUrl}/markers`, {
       reconnection: false,
     });
@@ -29,7 +29,7 @@ class SocketService {
       this.#isConnectionError = true;
     });
 
-    this.#socket.on("update-location", (users: User[]) => {
+    this.#socket.on(`update-location-${trailId}`, (users: User[]) => {
       this.#leafletService.updateUserMarkers(users);
     });
 
@@ -38,9 +38,9 @@ class SocketService {
     });
   }
 
-  constructor(leafletService: LeafletService) {
+  constructor(leafletService: LeafletService, trailId: string) {
     this.#leafletService = leafletService;
-    this.setUpSocket();
+    this.setUpSocket(trailId);
   }
 
   public destroy() {

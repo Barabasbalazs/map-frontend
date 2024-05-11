@@ -1,24 +1,6 @@
 <template>
   <div class="flex flex-col gap-2 w-full">
     <div class="flex flex-col gap-3 w-full">
-      <h3 class="text-lg">User Information</h3>
-      <div class="grid grid-cols-2 gap-4">
-        <BaseInput
-          v-model="model.user.id"
-          id="id"
-          label="Id"
-          type="number"
-          :error="errors.id"
-        />
-        <BaseInput
-          v-model="model.user.name"
-          id="name"
-          label="Name"
-          :error="errors.name"
-        />
-      </div>
-    </div>
-    <div class="flex flex-col gap-3 w-full">
       <h3 class="text-lg">The Users starting point</h3>
       <div class="grid grid-cols-2 gap-4">
         <BaseInput
@@ -106,4 +88,4 @@ async function validateModel() {
   }
   emit("update:modelValue", model.value);
 }
-</script>../shared/BaseInput.vue../shared/BaseButton.vue../../validation/user-parameters-validation
+</script>

@@ -1,6 +1,6 @@
 <template>
   <LoadingAnimation v-if="isLoading" />
-  <PageLayout title="Balázs's Map App Simulator">
+  <PageLayout v-else title="Balázs's Map App Simulator">
     <div class="flex flex-col items-center h-full w-full px-5 md:w-1/3 gap-6">
       <h2>
         Based on the input data, a path of coordinates will be generated. These
@@ -13,6 +13,7 @@
       />
       <PathDisplay
         v-else-if="path && isBroadcasting"
+        :trail-id="trailId"
         :path="path"
         :user="user"
         @finished-broadcast="isBroadcasting = false"
@@ -31,9 +32,13 @@ import PageLayout from "../components/shared/PageLayout.vue";
 import { UserWithParameters } from "../types/user-parameters";
 import { generateRandomizedPath } from "../utils/path-generator";
 import { usePermissionRerouting } from "../composables/permission-rerouting";
-import { ref } from "vue";
+import { useTrailsStore } from "../stores/trails-store";
+import { useAuthStore } from "../stores/auth-store";
+import { computed, ref } from "vue";
 
 const { isLoading } = usePermissionRerouting();
+const trailsStore = useTrailsStore();
+const authStore = useAuthStore();
 
 const path = ref();
 const user = ref();
@@ -41,9 +46,9 @@ const isBroadcasting = ref(false);
 
 const userWithParametersModel = ref({
   user: {
-    id: undefined,
-    name: "",
-    email: "email@email.com",
+    id: authStore.user?.id || "",
+    name: authStore.user?.name || "User",
+    email: authStore.user?.email || "",
     coords: {
       lat: 51.507,
       lng: 0.1,
@@ -54,6 +59,8 @@ const userWithParametersModel = ref({
     speed: undefined,
   },
 });
+
+const trailId = computed(() => trailsStore.trail?.id);
 
 function createPath(generatedData: UserWithParameters) {
   path.value = generateRandomizedPath(

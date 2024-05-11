@@ -92,7 +92,7 @@ describe("Parameters validator tests", () => {
     try {
       await userParametersSchema.validateAsync({
         user: {
-          id: 1,
+          id: "1",
           name: "test",
           coords: {
             lat: 10,

@@ -41,8 +41,7 @@ onMounted(async () => {
       lat: trail.value?.path?.[0]?.coordinates?.lat || 51.505,
       lng: trail.value?.path?.[0]?.coordinates?.lng || -0.09,
     }, false, trail.value?.path);
-    socketService = new SocketService(leafletService);
-    socketService.setUpSocket();
+    socketService = new SocketService(leafletService, trail.value?.id);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     isErrorModalOpen.value = socketService.getConnectionError();
   }
@@ -51,7 +50,7 @@ onMounted(async () => {
 async function setUpConnection() {
   isErrorModalOpen.value = false;
   await new Promise((resolve) => setTimeout(resolve, 3000));
-  socketService.setUpSocket();
+  socketService.setUpSocket(trail.value?.id);
   isErrorModalOpen.value = socketService.getConnectionError();
 }
 

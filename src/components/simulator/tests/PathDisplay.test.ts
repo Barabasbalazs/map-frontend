@@ -30,6 +30,7 @@ const baseProps = {
       lng: 3,
     },
   ] as Coordinates[],
+  trailId: "1",
 };
 
 function parameteresForComposable() {

@@ -95,14 +95,14 @@ class LeafletService {
   public addUserMarker(user: User) {
     const { coords } = user;
     if (!coords) return;
-    this.#addDisplayMarker(user.id, coords, user.name);
+    this.#addDisplayMarker(user.name, coords, user.name);
   }
 
   public updateUserMarkers(users: User[]) {
     users.forEach((user) => {
       const { coords } = user;
       if (!coords) return;
-      const marker = this.#markerMapping.get(user.id);
+      const marker = this.#markerMapping.get(user.name);
       if (marker) {
         marker.setLatLng([coords.lat, coords.lng]);
         return;
