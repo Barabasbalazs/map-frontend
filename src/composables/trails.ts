@@ -21,8 +21,7 @@ export function useTrails() {
   const isModalOpen = ref(false);
   const isCreatingNewTrail = ref(false);
 
-  const isTrailsPage = computed(() => route.path === "/trails");
-
+  const isTrailsPage = computed(() => route.name === "Trails Page");
   const user = computed(() => authStore.user);
   const isGuide = computed(() => user.value?.role === "guide");
   const trails = computed(() => {

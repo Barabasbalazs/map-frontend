@@ -15,9 +15,13 @@
         :options="['asc', 'desc']"
       />
       <div class="flex items-center">
-        <RouterLink id="my-trails-link" :to="isGuide ? '/my-trails' : '/subscribed-trails'" class="text-blue-700">{{
-          isGuide ? "My Trails" : "Subscribed Trails"
-        }}</RouterLink>
+        <RouterLink
+          v-if="props.user.role !== 'admin'"
+          id="my-trails-link"
+          :to="isGuide ? '/my-trails' : '/subscribed-trails'"
+          class="text-blue-700"
+          >{{ isGuide ? "My Trails" : "Subscribed Trails" }}</RouterLink
+        >
       </div>
     </div>
   </div>
