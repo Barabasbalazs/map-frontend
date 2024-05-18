@@ -3,7 +3,7 @@ import { RequestParameters } from "../types/request-parameter";
 import { useTrailsStore } from "../stores/trails-store";
 import { useAuthStore } from "../stores/auth-store";
 import { useRoute } from "vue-router";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 
 export function useTrails() {
   const emptyTrail = {
@@ -21,7 +21,7 @@ export function useTrails() {
   const isModalOpen = ref(false);
   const isCreatingNewTrail = ref(false);
 
-  const isTrailsPage = computed(() => route.name === "Trails Page");
+  const isTrailsPage = computed(() => route?.name === "Trails Page");
   const user = computed(() => authStore.user);
   const isGuide = computed(() => user.value?.role === "guide");
   const trails = computed(() => {
@@ -59,14 +59,11 @@ export function useTrails() {
   }
 
   async function trailsPageMountingFunction() {
-    if (isGuide.value) {
-      getTrails({ sort: "name", order: "asc", search: "" });
-    } else {
-      await Promise.all([
-        getTrails({ sort: "name", order: "asc", search: "" }),
-        authStore.getUser(),
-      ]);
-    }
+    await Promise.all([
+      getTrails({ sort: "name", order: "asc", search: "" }),
+      authStore.getUser(),
+    ]);
+
     isLoading.value = false;
   }
 
@@ -81,6 +78,16 @@ export function useTrails() {
     isTrailsPage.value
       ? await trailsPageMountingFunction()
       : await createdTrailsPageMountingFunction()
+  );
+
+  watch(
+    () => isTrailsPage.value,
+    async (newValue) => {
+      isLoading.value = true;
+      newValue
+        ? await trailsPageMountingFunction()
+        : await createdTrailsPageMountingFunction();
+    }
   );
 
   return {
