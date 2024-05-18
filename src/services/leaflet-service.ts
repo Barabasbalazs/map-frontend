@@ -94,7 +94,11 @@ class LeafletService {
         offset: [0, -7],
         className: "marker-popup",
       });
-    if (isColored) (marker as any)._icon.classList.add("user-marker");
+    if (isColored) {
+      (marker as any)._icon.style.filter = `hue-rotate(${Math.floor(
+        Math.random() * (360 - 10) + 10
+      )}deg)`;
+    }
     this.#markerMapping.set(id, marker);
   }
 

@@ -6,10 +6,6 @@ html * {
   font-family: "Futura";
 }
 
-.user-marker {
-  filter: hue-rotate(270deg);
-}
-
 /*zoom button styling*/
 .control-zoom {
   border: none !important;
