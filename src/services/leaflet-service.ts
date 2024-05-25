@@ -1,11 +1,11 @@
-import { ref } from "vue";
-import type { Ref } from "vue";
-import L, { Marker, TileLayer } from "leaflet";
 import { Coordinates } from "../types/coordinates";
 import { User } from "../models/user-model";
 import { PathPoint } from "../models/trail-model";
 import markerIcon from "../assets/icons/marker.svg";
 import tileLayers from "../constants/tilelayers";
+import { ref } from "vue";
+import type { Ref } from "vue";
+import L, { Marker, TileLayer } from "leaflet";
 class LeafletService {
   #mapInstance: Ref<any> = ref();
   #markerMapping: Map<string, Marker<any>>;
@@ -74,10 +74,6 @@ class LeafletService {
     this.initializeMap(mapDiv, coords, editable, path);
   }
 
-  public destroyMap() {
-    this.#mapInstance.value.remove();
-  }
-
   #addDisplayMarker(
     id: string,
     coords: Coordinates,
@@ -119,6 +115,10 @@ class LeafletService {
       }
       this.addUserMarker(user);
     });
+  }
+
+  public destroyMap() {
+    this.#mapInstance.value.remove();
   }
 }
 

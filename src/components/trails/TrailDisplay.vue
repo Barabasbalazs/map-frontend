@@ -61,8 +61,10 @@
           >Cancel</BaseButton
         ></template
       >
-      <template v-else-if="isCreator"
-        ><BaseButton id="edit" @click="handleEdit">Edit</BaseButton>
+      <template v-else-if="isCreator || isAdmin"
+        ><BaseButton v-if="isCreator" id="edit" @click="handleEdit"
+          >Edit</BaseButton
+        >
         <BaseButton id="delete" @click="handleDelete" secondary
           >Delete</BaseButton
         >
@@ -130,6 +132,7 @@ const isSubscribed = computed(() =>
   props.user?.trails?.includes(props.trail._id)
 );
 const isCreator = computed(() => props.user?.id === props.trail?.creator?.id);
+const isAdmin = computed(() => props.user?.role === "admin");
 /*
 function maxAbsoluteCoordinate(coordinates: number[]): number {
   return Math.max(...coordinates.map((coordinate) => Math.abs(coordinate)));
