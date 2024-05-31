@@ -1,4 +1,5 @@
 import { RequestParameters } from "../types/request-parameter";
+import { useNotificationStore } from "../stores/notification-store";
 
 interface RequestSettings<T> {
   url: string;
@@ -61,7 +62,11 @@ export const request = {
 };
 
 export const parseResponse = async (resp: Response) => {
-  if (resp.status < 200 || resp.status >= 300) return null;
+  if (resp.status < 200 || resp.status >= 300) {
+    const message = (await resp.json()).message || "An error occurred";
+    useNotificationStore().displayNotification("Error", message, true);
+    return null;
+  }
   const response = await resp.json();
   return response;
 };
